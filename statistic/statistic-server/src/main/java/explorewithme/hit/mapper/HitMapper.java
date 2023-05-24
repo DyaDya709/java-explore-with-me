@@ -12,7 +12,7 @@ import java.time.format.DateTimeParseException;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class HitMapper {
-    private static final String patternFormat = "yyyy-MM-dd HH:mm:ss";
+    private static final String PATTERN_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public static Hit toEntity(HitDto hitDto) {
         Hit hit = new Hit();
@@ -25,7 +25,7 @@ public final class HitMapper {
     }
 
     public static LocalDateTime stringToLocalDateTime(String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(patternFormat);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_FORMAT);
         try {
             return LocalDateTime.parse(date, formatter);
         } catch (DateTimeParseException e) {

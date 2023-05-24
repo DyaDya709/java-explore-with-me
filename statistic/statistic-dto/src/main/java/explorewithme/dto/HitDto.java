@@ -11,13 +11,13 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 @NoArgsConstructor
 public class HitDto {
-    Long id;
-    @NotBlank(message = "app must no be blank")
-    String app;
-    @NotBlank(message = "uri must no be blank")
-    String uri;
-    @NotBlank(message = "ip must no be blank")
-    String ip;
+    private Long id;
+    @NotBlank(message = "app must not be blank")
+    private String app;
+    @NotBlank(message = "uri must not be blank")
+    private String uri;
+    @NotBlank(message = "ip must not be blank")
+    private String ip;
     @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}", message = "Invalid date format")
-    String timestamp;
+    private String timestamp;
 }
