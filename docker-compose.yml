@@ -30,9 +30,30 @@ services:
       - POSTGRES_PASSWORD=123
   #      - TZ=Europe/Moscow
 
-#  ewm-service:
-#    ports:
-#      - "8080:8080"
-#
-#  ewm-db:
-#    image: postgres:14-alpine
+  ewm-service:
+    build: ./main-service
+    container_name: main-service-container
+    ports:
+      - "8080:8080"
+    depends_on:
+      - ewm-db
+    environment:
+      - DB_NAME=main-service-db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=123
+      - DB_HOST=ewm-db
+      - DB_PORT=5432
+      - STAT_SERVICE_URL=http://stats-server:9090
+      - MAIN_NAME=ewm-service
+
+  ewm-db:
+    image: postgres:14-alpine
+    container_name: main-db-container
+    volumes:
+      - /var/lib/postgresql/data/
+    ports:
+      - "6542:5432"
+    environment:
+      - POSTGRES_DB=main-service-db
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=123

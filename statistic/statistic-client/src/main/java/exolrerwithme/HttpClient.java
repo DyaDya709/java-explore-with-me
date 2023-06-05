@@ -13,14 +13,16 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
 public class HttpClient {
     private static final String PATTERN_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    private static final String GET_STAT_URL = "http://localhost:9090/stats";
-    private static final String POST_HIT_URL = "http://localhost:9090/hit";
+    private static final String GET_STAT_URL = "/stats";
+    private static final String POST_HIT_URL = "/hit";
     private static final Duration TIMEOUT = Duration.ofSeconds(10);
     private final WebClient webClient;
+
+    public HttpClient(String url) {
+        this.webClient = WebClient.create(url);
+    }
 
     private static String localDateTimeToString(LocalDateTime date) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(PATTERN_FORMAT);
