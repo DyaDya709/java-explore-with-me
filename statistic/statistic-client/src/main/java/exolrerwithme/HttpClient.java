@@ -2,10 +2,8 @@ package exolrerwithme;
 
 import explorewithme.dto.HitDto;
 import explorewithme.dto.StatDto;
-import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Duration;

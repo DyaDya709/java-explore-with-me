@@ -1,4 +1,4 @@
-package config;
+package ru.practicum.config;
 
 import exolrerwithme.HttpClient;
 import org.springframework.beans.factory.annotation.Value;
