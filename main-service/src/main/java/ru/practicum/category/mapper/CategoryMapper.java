@@ -7,14 +7,7 @@ import ru.practicum.category.model.Category;
 
 @UtilityClass
 public class CategoryMapper {
-    public Category categoryDtoToCategory(CategoryDto categoryDto) {
-        return Category.builder()
-                .id(categoryDto.getId())
-                .name(categoryDto.getName())
-                .build();
-    }
-
-    public CategoryDto categoryToCategoryDto(Category category) {
+    public CategoryDto toDto(Category category) {
         return CategoryDto.builder()
                 .id(category.getId())
                 .name(category.getName())

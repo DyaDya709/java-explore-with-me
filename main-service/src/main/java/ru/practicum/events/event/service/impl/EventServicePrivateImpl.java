@@ -1,7 +1,7 @@
 package ru.practicum.events.event.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,10 +27,10 @@ import ru.practicum.events.request.mapper.RequestMapper;
 import ru.practicum.events.request.model.Request;
 import ru.practicum.events.request.model.RequestStatus;
 import ru.practicum.events.request.storage.RequestRepository;
-import ru.practicum.exception.BadRequestException;
-import ru.practicum.exception.ConflictRequestException;
-import ru.practicum.exception.ForbiddenEventException;
-import ru.practicum.exception.ResourceNotFoundException;
+import ru.practicum.exception.type.BadRequestException;
+import ru.practicum.exception.type.ConflictRequestException;
+import ru.practicum.exception.type.ForbiddenEventException;
+import ru.practicum.exception.type.ResourceNotFoundException;
 import ru.practicum.users.model.User;
 import ru.practicum.users.storage.UserRepository;
 import ru.practicum.util.DateFormatter;
@@ -44,25 +44,13 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class EventServicePrivateImpl implements EventServicePrivate {
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
     private final RequestRepository requestRepository;
     private final ProcessingEvents processingEvents;
     private final UserRepository userRepository;
-
-    @Autowired
-    public EventServicePrivateImpl(EventRepository eventRepository,
-                                   CategoryRepository categoryRepository,
-                                   RequestRepository requestRepository,
-                                   UserRepository userRepository,
-                                   ProcessingEvents processingEvents) {
-        this.eventRepository = eventRepository;
-        this.categoryRepository = categoryRepository;
-        this.requestRepository = requestRepository;
-        this.userRepository = userRepository;
-        this.processingEvents = processingEvents;
-    }
 
     @Override
     public List<EventShortDto> getAllPrivateEventsByUserId(Long userId, int from, int size, HttpServletRequest request) {
@@ -75,7 +63,7 @@ public class EventServicePrivateImpl implements EventServicePrivate {
         List<Event> eventsAddViews = processingEvents.addViewsInEventsList(events, request);
         List<Event> newEvents = processingEvents.confirmedRequests(eventsAddViews);
         return newEvents.stream()
-                .map(EventMapper::eventToeventShortDto).collect(Collectors.toList());
+                .map(EventMapper::toShortDto).collect(Collectors.toList());
     }
 
     @Override
@@ -97,7 +85,7 @@ public class EventServicePrivateImpl implements EventServicePrivate {
         Event event = getEventById(eventId);
         checkOwnerEvent(event, user);
         addEventConfirmedRequestsAndViews(event, request);
-        return EventMapper.eventToEventFullDto(event);
+        return EventMapper.toDto(event);
     }
 
     @Override
@@ -124,7 +112,7 @@ public class EventServicePrivateImpl implements EventServicePrivate {
             event.setEventDate(DateFormatter.formatDate(updateEvent.getEventDate()));
         }
         if (updateEvent.getLocation() != null) {
-            event.setLocation(LocationMapper.locationDtoToLocation(updateEvent.getLocation()));
+            event.setLocation(LocationMapper.toEntity(updateEvent.getLocation()));
         }
         if (updateEvent.getPaid() != null) {
             event.setPaid(updateEvent.getPaid());
@@ -277,7 +265,7 @@ public class EventServicePrivateImpl implements EventServicePrivate {
 
     private EventFullDto getEventFullDto(Event event) {
         try {
-            return EventMapper.eventToEventFullDto(eventRepository.save(event));
+            return EventMapper.toDto(eventRepository.save(event));
         } catch (DataAccessException e) {
             throw new ResourceNotFoundException("База данных недоступна");
         } catch (Exception e) {

@@ -1,7 +1,7 @@
 package ru.practicum.events.event.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,14 +22,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/users/{userId}/events")
 @Slf4j
-@Validated
+@RequiredArgsConstructor
 public class EventControllerPrivate {
     private final EventServicePrivate eventServicePrivate;
-
-    @Autowired
-    public EventControllerPrivate(EventServicePrivate eventServicePrivate) {
-        this.eventServicePrivate = eventServicePrivate;
-    }
 
     @GetMapping()
     List<EventShortDto> getAllPrivateEventsByUser(@PathVariable Long userId,

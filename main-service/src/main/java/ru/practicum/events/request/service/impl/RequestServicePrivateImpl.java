@@ -1,7 +1,7 @@
 package ru.practicum.events.request.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import ru.practicum.events.event.model.Event;
@@ -14,9 +14,9 @@ import ru.practicum.events.request.model.Request;
 import ru.practicum.events.request.model.RequestStatus;
 import ru.practicum.events.request.service.RequestServicePrivate;
 import ru.practicum.events.request.storage.RequestRepository;
-import ru.practicum.exception.BadRequestException;
-import ru.practicum.exception.ConflictRequestException;
-import ru.practicum.exception.ResourceNotFoundException;
+import ru.practicum.exception.type.BadRequestException;
+import ru.practicum.exception.type.ConflictRequestException;
+import ru.practicum.exception.type.ResourceNotFoundException;
 import ru.practicum.users.model.User;
 import ru.practicum.users.storage.UserRepository;
 
@@ -29,22 +29,12 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class RequestServicePrivateImpl implements RequestServicePrivate {
     private final UserRepository userRepository;
     private final RequestRepository requestRepository;
     private final EventRepository eventRepository;
     private final ProcessingEvents processingEvents;
-
-    @Autowired
-    public RequestServicePrivateImpl(UserRepository userRepository,
-                                     RequestRepository requestRepository,
-                                     EventRepository eventRepository,
-                                     ProcessingEvents processingEvents) {
-        this.userRepository = userRepository;
-        this.requestRepository = requestRepository;
-        this.eventRepository = eventRepository;
-        this.processingEvents = processingEvents;
-    }
 
     @Override
     public List<ParticipationRequestDto> getAllRequestsUserById(Long userId) {

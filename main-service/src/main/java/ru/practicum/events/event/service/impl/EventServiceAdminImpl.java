@@ -1,7 +1,7 @@
 package ru.practicum.events.event.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import ru.practicum.category.model.Category;
@@ -16,9 +16,9 @@ import ru.practicum.events.event.model.EventState;
 import ru.practicum.events.event.service.EventServiceAdmin;
 import ru.practicum.events.event.storage.EventRepository;
 import ru.practicum.events.request.model.RequestStatus;
-import ru.practicum.exception.BadRequestException;
-import ru.practicum.exception.ForbiddenEventException;
-import ru.practicum.exception.ResourceNotFoundException;
+import ru.practicum.exception.type.BadRequestException;
+import ru.practicum.exception.type.ForbiddenEventException;
+import ru.practicum.exception.type.ResourceNotFoundException;
 import ru.practicum.util.DateFormatter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,19 +30,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class EventServiceAdminImpl implements EventServiceAdmin {
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
     private final ProcessingEvents processingEvents;
-
-    @Autowired
-    public EventServiceAdminImpl(EventRepository eventRepository,
-                                 CategoryRepository categoryRepository,
-                                 ProcessingEvents processingEvents) {
-        this.eventRepository = eventRepository;
-        this.categoryRepository = categoryRepository;
-        this.processingEvents = processingEvents;
-    }
 
     @Override
     public List<EventFullDto> getAllEventsForAdmin(List<Long> users, List<String> states, List<Long> categories,
@@ -62,12 +54,12 @@ public class EventServiceAdminImpl implements EventServiceAdmin {
             events = eventRepository.findAllByAdmin(users, states, categories, newRangeStart, newRangeEnd, from, size);
             List<Event> eventsAddViews = processingEvents.addViewsInEventsList(events, request);
             List<Event> newEvents = processingEvents.confirmedRequests(eventsAddViews);
-            return newEvents.stream().map(EventMapper::eventToEventFullDto).collect(Collectors.toList());
+            return newEvents.stream().map(EventMapper::toDto).collect(Collectors.toList());
         } else {
             events = eventRepository.findAllByAdminAndState(users, categories, newRangeStart, newRangeEnd, from, size);
             List<Event> eventsAddViews = processingEvents.addViewsInEventsList(events, request);
             List<Event> newEvents = processingEvents.confirmedRequests(eventsAddViews);
-            return newEvents.stream().map(EventMapper::eventToEventFullDto).collect(Collectors.toList());
+            return newEvents.stream().map(EventMapper::toDto).collect(Collectors.toList());
         }
     }
 
@@ -93,7 +85,7 @@ public class EventServiceAdminImpl implements EventServiceAdmin {
             event.setEventDate(DateFormatter.formatDate(updateEvent.getEventDate()));
         }
         if (updateEvent.getLocation() != null) {
-            event.setLocation(LocationMapper.locationDtoToLocation(updateEvent.getLocation()));
+            event.setLocation(LocationMapper.toEntity(updateEvent.getLocation()));
         }
         if (updateEvent.getPaid() != null) {
             event.setPaid(updateEvent.getPaid());
@@ -122,7 +114,7 @@ public class EventServiceAdminImpl implements EventServiceAdmin {
             event.setConfirmedRequests(0L);
         }
         try {
-            return EventMapper.eventToEventFullDto(eventRepository.save(event));
+            return EventMapper.toDto(eventRepository.save(event));
         } catch (DataAccessException e) {
             throw new ResourceNotFoundException("База данных недоступна");
         } catch (Exception e) {

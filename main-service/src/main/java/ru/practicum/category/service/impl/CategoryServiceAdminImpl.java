@@ -1,7 +1,7 @@
 package ru.practicum.category.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import ru.practicum.category.dto.CategoryDto;
@@ -12,24 +12,19 @@ import ru.practicum.category.service.CategoryServiceAdmin;
 import ru.practicum.category.storage.CategoryRepository;
 import ru.practicum.events.event.model.Event;
 import ru.practicum.events.event.storage.EventRepository;
-import ru.practicum.exception.BadRequestException;
-import ru.practicum.exception.ConflictDeleteException;
-import ru.practicum.exception.ConflictNameCategoryException;
-import ru.practicum.exception.ResourceNotFoundException;
+import ru.practicum.exception.type.BadRequestException;
+import ru.practicum.exception.type.ConflictDeleteException;
+import ru.practicum.exception.type.ConflictNameCategoryException;
+import ru.practicum.exception.type.ResourceNotFoundException;
 
 import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class CategoryServiceAdminImpl implements CategoryServiceAdmin {
     private final CategoryRepository categoryRepository;
     private final EventRepository eventRepository;
-
-    @Autowired
-    public CategoryServiceAdminImpl(CategoryRepository categoryRepository, EventRepository eventRepository) {
-        this.categoryRepository = categoryRepository;
-        this.eventRepository = eventRepository;
-    }
 
     @Override
     public CategoryDto addCategory(NewCategoryDto newCategoryDto) {
@@ -59,7 +54,7 @@ public class CategoryServiceAdminImpl implements CategoryServiceAdmin {
 
     private CategoryDto getCategoryDto(Category category, String name) {
         try {
-            return CategoryMapper.categoryToCategoryDto(categoryRepository.save(category));
+            return CategoryMapper.toDto(categoryRepository.save(category));
         } catch (DataIntegrityViolationException e) {
             log.warn("Нарушена уникальность имени категории {} уже используется", name);
             throw new ConflictNameCategoryException("Имя категории должно быть уникальным, "

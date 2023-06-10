@@ -10,8 +10,8 @@ import java.util.Set;
 /**
  * // Подборка событий
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,6 +20,7 @@ import java.util.Set;
 public class Compilation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(

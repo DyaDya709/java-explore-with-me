@@ -2,7 +2,7 @@ package ru.practicum.events.event.service.impl;
 
 import exolrerwithme.HttpClient;
 import explorewithme.dto.StatDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.events.event.model.Event;
 import ru.practicum.events.event.storage.EventRepository;
@@ -22,17 +22,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ProcessingEvents {
     private final EventRepository eventRepository;
     private final RequestRepository requestRepository;
     private final HttpClient client;
-
-    @Autowired
-    public ProcessingEvents(EventRepository eventRepository, RequestRepository requestRepository, HttpClient client) {
-        this.eventRepository = eventRepository;
-        this.requestRepository = requestRepository;
-        this.client = client;
-    }
 
     public List<Event> addViewsInEventsList(List<Event> events, HttpServletRequest request) {
         List<String> uris = events.stream().map(e -> request.getRequestURI() + "/" + e.getId()).collect(Collectors.toList());

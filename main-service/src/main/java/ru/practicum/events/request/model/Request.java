@@ -7,8 +7,8 @@ import ru.practicum.users.model.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id; //Идентификатор заявки
     @Column(name = "created")
     private LocalDateTime created; // 2022-09-06T21:10:05.432 Дата и время создания заявки

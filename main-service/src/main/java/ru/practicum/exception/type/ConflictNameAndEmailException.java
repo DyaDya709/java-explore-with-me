@@ -1,4 +1,4 @@
-package ru.practicum.exception;
+package ru.practicum.exception.type;
 
 public class ConflictNameAndEmailException extends RuntimeException {
     public ConflictNameAndEmailException(String message) {

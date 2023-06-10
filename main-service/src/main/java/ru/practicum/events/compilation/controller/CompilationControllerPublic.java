@@ -1,8 +1,7 @@
 package ru.practicum.events.compilation.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.events.compilation.dto.CompilationDto;
 import ru.practicum.events.compilation.service.CompilationServicePublic;
@@ -17,14 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/compilations")
 @Slf4j
-@Validated
+@RequiredArgsConstructor
 public class CompilationControllerPublic {
     private final CompilationServicePublic compilationService;
-
-    @Autowired
-    public CompilationControllerPublic(CompilationServicePublic compilationService) {
-        this.compilationService = compilationService;
-    }
 
     /**
      * Получение подборок событий

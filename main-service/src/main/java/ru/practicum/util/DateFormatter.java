@@ -1,7 +1,7 @@
 package ru.practicum.util;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.exception.ValidationDateException;
+import ru.practicum.exception.type.ValidationDateException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

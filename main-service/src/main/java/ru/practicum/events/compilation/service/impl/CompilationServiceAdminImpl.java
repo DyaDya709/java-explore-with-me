@@ -1,7 +1,7 @@
 package ru.practicum.events.compilation.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.events.compilation.dto.CompilationDto;
 import ru.practicum.events.compilation.dto.NewCompilationDto;
@@ -12,7 +12,7 @@ import ru.practicum.events.compilation.service.CompilationServiceAdmin;
 import ru.practicum.events.compilation.storage.CompilationStorage;
 import ru.practicum.events.event.model.Event;
 import ru.practicum.events.event.storage.EventRepository;
-import ru.practicum.exception.ResourceNotFoundException;
+import ru.practicum.exception.type.ResourceNotFoundException;
 
 import java.util.HashSet;
 import java.util.List;
@@ -20,16 +20,10 @@ import java.util.Set;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class CompilationServiceAdminImpl implements CompilationServiceAdmin {
     private final CompilationStorage compilationStorage;
     private final EventRepository eventRepository;
-
-    @Autowired
-    public CompilationServiceAdminImpl(CompilationStorage compilationStorage,
-                                       EventRepository eventRepository) {
-        this.compilationStorage = compilationStorage;
-        this.eventRepository = eventRepository;
-    }
 
     @Override
     public CompilationDto addCompilation(NewCompilationDto newCompilationDto) {
@@ -39,7 +33,7 @@ public class CompilationServiceAdminImpl implements CompilationServiceAdmin {
             events = addEvents(newCompilationDto.getEvents());
         }
         Compilation compilation = CompilationMapper.newCompilationDtoToCompilationAndEvents(newCompilationDto, events);
-        return CompilationMapper.compilationToCompilationDto(compilationStorage.save(compilation));
+        return CompilationMapper.toDto(compilationStorage.save(compilation));
     }
 
     @Override
@@ -66,7 +60,7 @@ public class CompilationServiceAdminImpl implements CompilationServiceAdmin {
         if (updateCompilationRequest.getTitle() != null && updateCompilationRequest.getTitle().isBlank()) {
             newCompilation.setTitle(updateCompilationRequest.getTitle());
         }
-        return CompilationMapper.compilationToCompilationDto(compilationStorage.save(newCompilation));
+        return CompilationMapper.toDto(compilationStorage.save(newCompilation));
     }
 
     private Set<Event> addEvents(List<Long> eventsIds) {

@@ -1,14 +1,14 @@
 package ru.practicum.users.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.practicum.exception.BadRequestException;
-import ru.practicum.exception.ConflictNameAndEmailException;
-import ru.practicum.exception.ResourceNotFoundException;
+import ru.practicum.exception.type.BadRequestException;
+import ru.practicum.exception.type.ConflictNameAndEmailException;
+import ru.practicum.exception.type.ResourceNotFoundException;
 import ru.practicum.users.dto.NewUserRequest;
 import ru.practicum.users.dto.UserDto;
 import ru.practicum.users.mapper.UserMapper;
@@ -22,13 +22,9 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceAdminImpl implements UserServiceAdmin {
     private final UserRepository userRepository;
-
-    @Autowired
-    public UserServiceAdminImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public List<UserDto> getAllUsersByIds(List<Long> ids, int from, int size) {
@@ -40,7 +36,7 @@ public class UserServiceAdminImpl implements UserServiceAdmin {
         } else {
             users = userRepository.findAllBy(pageable);
         }
-        return users.stream().map(UserMapper::userToDto).collect(Collectors.toList());
+        return users.stream().map(UserMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -48,7 +44,7 @@ public class UserServiceAdminImpl implements UserServiceAdmin {
         log.info("Получен запрос на добавление пользователя {}", newUserRequest);
         User user = UserMapper.newUserRequestToUser(newUserRequest);
         try {
-            return UserMapper.userToDto(userRepository.save(user));
+            return UserMapper.toDto(userRepository.save(user));
         } catch (DataIntegrityViolationException e) {
             throw new ConflictNameAndEmailException("Почта " + newUserRequest.getEmail() + " или имя пользователя " +
                     newUserRequest.getName() + " уже используется");

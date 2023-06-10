@@ -2,8 +2,8 @@ package ru.practicum.events.event.service.impl;
 
 import exolrerwithme.HttpClient;
 import explorewithme.dto.HitDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +15,7 @@ import ru.practicum.events.event.model.EventState;
 import ru.practicum.events.event.service.EventServicePublic;
 import ru.practicum.events.event.storage.EventRepository;
 import ru.practicum.events.request.model.RequestStatus;
-import ru.practicum.exception.ResourceNotFoundException;
+import ru.practicum.exception.type.ResourceNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class EventServicePublicImpl implements EventServicePublic {
     public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -34,15 +35,6 @@ public class EventServicePublicImpl implements EventServicePublic {
     private final HttpClient client;
     @Value("${app.name}")
     private String appName;
-
-    @Autowired
-    public EventServicePublicImpl(EventRepository eventRepository,
-                                  HttpClient client,
-                                  ProcessingEvents processingEvents) {
-        this.eventRepository = eventRepository;
-        this.client = client;
-        this.processingEvents = processingEvents;
-    }
 
     @Override
     public List<EventShortDto> getAllPublicEvents(String text, List<Long> categories, Boolean paid, String rangeStart,
@@ -63,9 +55,9 @@ public class EventServicePublicImpl implements EventServicePublic {
         List<Event> newEvents = processingEvents.confirmedRequests(eventsAddViews);
         if (!onlyAvailable) {
             return newEvents.stream().filter(e -> e.getParticipantLimit() >= e.getConfirmedRequests())
-                    .map(EventMapper::eventToeventShortDto).collect(Collectors.toList());
+                    .map(EventMapper::toShortDto).collect(Collectors.toList());
         }
-        return newEvents.stream().map(EventMapper::eventToeventShortDto).collect(Collectors.toList());
+        return newEvents.stream().map(EventMapper::toShortDto).collect(Collectors.toList());
     }
 
     @Override
@@ -76,7 +68,7 @@ public class EventServicePublicImpl implements EventServicePublic {
         Event event = eventRepository.findEventByIdAndStateIs(id, EventState.PUBLISHED).orElseThrow(()
                 -> new ResourceNotFoundException("Событие c id = " + id + " не найдено"));
         addEventConfirmedRequestsAndViews(event, request);
-        return EventMapper.eventToEventFullDto(event);
+        return EventMapper.toDto(event);
     }
 
     private HitDto createHitDtoToStats(HttpServletRequest request) {

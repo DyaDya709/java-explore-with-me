@@ -1,9 +1,8 @@
 package ru.practicum.events.request.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.events.request.dto.ParticipationRequestDto;
 import ru.practicum.events.request.service.RequestServicePrivate;
@@ -15,14 +14,9 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/users/{userId}/requests")
 @Slf4j
-@Validated
+@RequiredArgsConstructor
 public class RequestControllerPrivate {
     private final RequestServicePrivate requestServicePrivate;
-
-    @Autowired
-    public RequestControllerPrivate(RequestServicePrivate requestServicePrivate) {
-        this.requestServicePrivate = requestServicePrivate;
-    }
 
     /**
      * Информация о заявках текущего пользователя на участие в чужих событиях
