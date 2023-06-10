@@ -10,10 +10,10 @@ import ru.practicum.category.model.Category;
 import ru.practicum.category.storage.CategoryRepository;
 import ru.practicum.events.event.model.Event;
 import ru.practicum.events.event.storage.EventRepository;
-import ru.practicum.exception.BadRequestException;
-import ru.practicum.exception.ConflictDeleteException;
-import ru.practicum.exception.ConflictNameCategoryException;
-import ru.practicum.exception.ResourceNotFoundException;
+import ru.practicum.exception.CustomBadRequestException;
+import ru.practicum.exception.CustomConflictDeleteException;
+import ru.practicum.exception.CustomConflictNameCategoryException;
+import ru.practicum.exception.CustomResourceNotFoundException;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class CategoryServiceAdminImpl implements CategoryServiceAdmin {
     public void deleteCategoryById(Long catId) {
         Category category = getCategoryById(catId);
         if (isRelatedEvent(category)) {
-            throw new ConflictDeleteException("Существуют события, связанные с категорией " + category.getName());
+            throw new CustomConflictDeleteException("Существуют события, связанные с категорией " + category.getName());
         }
         categoryRepository.delete(category);
     }
@@ -50,16 +50,16 @@ public class CategoryServiceAdminImpl implements CategoryServiceAdmin {
         try {
             return CategoryMapper.toDto(categoryRepository.save(category));
         } catch (DataIntegrityViolationException e) {
-            throw new ConflictNameCategoryException("Имя категории должно быть уникальным, "
+            throw new CustomConflictNameCategoryException("Имя категории должно быть уникальным, "
                     + name + " уже используется");
         } catch (Exception e) {
-            throw new BadRequestException("Запрос на добавлении категории " + name + " составлен не корректно ");
+            throw new CustomBadRequestException("Запрос на добавлении категории " + name + " составлен не корректно ");
         }
     }
 
     private Category getCategoryById(Long id) {
         return categoryRepository.findById(id).orElseThrow(()
-                -> new ResourceNotFoundException("Категория c id = " + id + " не найдена"));
+                -> new CustomResourceNotFoundException("Категория c id = " + id + " не найдена"));
     }
 
     private boolean isRelatedEvent(Category category) {

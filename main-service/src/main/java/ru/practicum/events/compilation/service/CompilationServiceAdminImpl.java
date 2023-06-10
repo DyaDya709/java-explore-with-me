@@ -10,7 +10,7 @@ import ru.practicum.events.compilation.model.Compilation;
 import ru.practicum.events.compilation.storage.CompilationStorage;
 import ru.practicum.events.event.model.Event;
 import ru.practicum.events.event.storage.EventRepository;
-import ru.practicum.exception.ResourceNotFoundException;
+import ru.practicum.exception.CustomResourceNotFoundException;
 
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +35,7 @@ public class CompilationServiceAdminImpl implements CompilationServiceAdmin {
     @Override
     public void deleteCompilationById(Long compId) {
         if (!compilationStorage.existsById(compId)) {
-            throw new ResourceNotFoundException("Подборка событий c id = " + compId + " не найдена");
+            throw new CustomResourceNotFoundException("Подборка событий c id = " + compId + " не найдена");
         }
         compilationStorage.deleteById(compId);
     }
@@ -63,6 +63,6 @@ public class CompilationServiceAdminImpl implements CompilationServiceAdmin {
 
     private Compilation getCompilationById(Long id) {
         return compilationStorage.findById(id).orElseThrow(()
-                -> new ResourceNotFoundException("Подборка событий c id = " + id + " не найдена"));
+                -> new CustomResourceNotFoundException("Подборка событий c id = " + id + " не найдена"));
     }
 }

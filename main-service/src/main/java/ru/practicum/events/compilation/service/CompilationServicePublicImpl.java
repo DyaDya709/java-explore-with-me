@@ -8,7 +8,7 @@ import ru.practicum.events.compilation.dto.CompilationDto;
 import ru.practicum.events.compilation.mapper.CompilationMapper;
 import ru.practicum.events.compilation.model.Compilation;
 import ru.practicum.events.compilation.storage.CompilationStorage;
-import ru.practicum.exception.ResourceNotFoundException;
+import ru.practicum.exception.CustomResourceNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +32,6 @@ public class CompilationServicePublicImpl implements CompilationServicePublic {
 
     private Compilation getCompilationByIdInRepository(Long id) {
         return compilationStorage.findById(id).orElseThrow(()
-                -> new ResourceNotFoundException("Подборка событий c id = " + id + " не найдена"));
+                -> new CustomResourceNotFoundException("Подборка событий c id = " + id + " не найдена"));
     }
 }

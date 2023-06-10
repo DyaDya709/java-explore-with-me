@@ -7,7 +7,7 @@ import ru.practicum.category.dto.CategoryDto;
 import ru.practicum.category.mapper.CategoryMapper;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.storage.CategoryRepository;
-import ru.practicum.exception.ResourceNotFoundException;
+import ru.practicum.exception.CustomResourceNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +26,7 @@ public class CategoryServicePublicImpl implements CategoryServicePublic {
     @Override
     public CategoryDto getCategoryById(Long catId) {
         Category category = categoryRepository.findById(catId).orElseThrow(()
-                -> new ResourceNotFoundException("Категория c id = " + catId + " не найдена"));
+                -> new CustomResourceNotFoundException("Категория c id = " + catId + " не найдена"));
         return CategoryMapper.toDto(category);
     }
 }

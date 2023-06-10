@@ -24,7 +24,7 @@ public final class UserMapper {
                 .build();
     }
 
-    public static User UserRequestToUser(UserRequest userRequest) {
+    public static User userRequestToUser(UserRequest userRequest) {
         User user = new User();
         user.setName(userRequest.getName());
         user.setEmail(userRequest.getEmail());

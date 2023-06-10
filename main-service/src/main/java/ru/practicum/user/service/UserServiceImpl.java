@@ -5,9 +5,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.practicum.exception.BadRequestException;
-import ru.practicum.exception.ConflictNameAndEmailException;
-import ru.practicum.exception.ResourceNotFoundException;
+import ru.practicum.exception.CustomBadRequestException;
+import ru.practicum.exception.CustomConflictNameAndEmailException;
+import ru.practicum.exception.CustomResourceNotFoundException;
 import ru.practicum.user.dto.UserDto;
 import ru.practicum.user.dto.UserRequest;
 import ru.practicum.user.mapper.UserMapper;
@@ -24,14 +24,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto create(UserRequest userRequest) {
-        User user = UserMapper.UserRequestToUser(userRequest);
+        User user = UserMapper.userRequestToUser(userRequest);
         try {
             return UserMapper.userToDto(userRepository.save(user));
         } catch (DataIntegrityViolationException e) {
-            throw new ConflictNameAndEmailException("Почта " + userRequest.getEmail() + " или имя пользователя " +
+            throw new CustomConflictNameAndEmailException("Почта " + userRequest.getEmail() + " или имя пользователя " +
                     userRequest.getName() + " уже используется");
         } catch (IllegalArgumentException e) {
-            throw new BadRequestException("Запрос на добавление пользователя" + userRequest + " составлен не корректно ");
+            throw new CustomBadRequestException("Запрос на добавление пользователя" + userRequest + " составлен не корректно ");
         }
     }
 
@@ -55,6 +55,6 @@ public class UserServiceImpl implements UserService {
 
     private User getUserById(Long id) {
         return userRepository.findById(id).orElseThrow(()
-                -> new ResourceNotFoundException("Пользователь c id = " + id + " не найден"));
+                -> new CustomResourceNotFoundException("Пользователь c id = " + id + " не найден"));
     }
 }

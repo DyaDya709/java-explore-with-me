@@ -11,7 +11,7 @@ import ru.practicum.events.event.mapper.EventMapper;
 import ru.practicum.events.event.model.Event;
 import ru.practicum.events.event.model.EventState;
 import ru.practicum.events.event.storage.EventRepository;
-import ru.practicum.exception.ResourceNotFoundException;
+import ru.practicum.exception.CustomResourceNotFoundException;
 import ru.practicum.request.model.RequestStatus;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,19 +49,19 @@ public class EventServicePublicImpl implements EventServicePublic {
         List<Event> newEvents = processingEvents.confirmedRequests(eventsAddViews);
         if (!onlyAvailable) {
             return newEvents.stream().filter(e -> e.getParticipantLimit() >= e.getConfirmedRequests())
-                    .map(EventMapper::eventToeventShortDto).collect(Collectors.toList());
+                    .map(EventMapper::toShortDto).collect(Collectors.toList());
         }
-        return newEvents.stream().map(EventMapper::eventToeventShortDto).collect(Collectors.toList());
+        return newEvents.stream().map(EventMapper::toShortDto).collect(Collectors.toList());
     }
 
     @Override
     public EventDto getPublicEventById(Long id, HttpServletRequest request) {
         HitDto hitDto = createHitDtoToStats(request);
         client.createHit(hitDto);
-        Event event = eventRepository.findEventByIdAndStateIs(id, EventState.PUBLISHED).orElseThrow(()
-                -> new ResourceNotFoundException("Событие c id = " + id + " не найдено"));
+        Event event = eventRepository.findEventByIdAndStateIs(id, EventState.PUBLISHED)
+                .orElseThrow(() -> new CustomResourceNotFoundException("Событие c id = " + id + " не найдено"));
         addEventConfirmedRequestsAndViews(event, request);
-        return EventMapper.eventToEventFullDto(event);
+        return EventMapper.toDto(event);
     }
 
     private HitDto createHitDtoToStats(HttpServletRequest request) {

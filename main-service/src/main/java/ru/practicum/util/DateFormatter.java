@@ -2,7 +2,7 @@ package ru.practicum.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import ru.practicum.exception.ValidationDateException;
+import ru.practicum.exception.CustomValidationDateException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -15,13 +15,13 @@ public final class DateFormatter {
 
     public static LocalDateTime formatDate(String date) {
         if (date == null) {
-            throw new ValidationDateException("Дата должна быть задана");
+            throw new CustomValidationDateException("Дата должна быть задана");
         }
         LocalDateTime newDate;
         try {
             newDate = LocalDateTime.parse(date, formatter);
         } catch (DateTimeParseException e) {
-            throw new ValidationDateException("Неверный формат даты");
+            throw new CustomValidationDateException("Неверный формат даты");
         }
         return newDate;
     }

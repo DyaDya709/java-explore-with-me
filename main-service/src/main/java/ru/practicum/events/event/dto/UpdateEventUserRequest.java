@@ -1,7 +1,9 @@
 package ru.practicum.events.event.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.events.event.model.ActionState;
 
 import javax.validation.constraints.Pattern;
@@ -10,6 +12,8 @@ import javax.validation.constraints.Size;
 
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UpdateEventUserRequest {
     @Size(min = 20, max = 2000, message = "Минимальное кол-во символов для описания: 20. Максимальное: 2000")
     String annotation; // example: Сап прогулки по рекам и каналам – это возможность увидеть Практикбург с другого ракурсаНовая аннотация

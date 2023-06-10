@@ -1,12 +1,16 @@
 package ru.practicum.events.event.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class NewEventDto {
     @NotBlank(message = "Поле annotation должно быть заполнено")
     @Size(min = 20, max = 2000, message = "Минимальное кол-во символов для описания: 20. Максимальное: 2000")
