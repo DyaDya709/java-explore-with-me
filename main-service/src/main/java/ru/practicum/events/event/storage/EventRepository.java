@@ -16,15 +16,13 @@ import java.util.Set;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
-
     List<Event> findEventByCategoryIs(Category category);
 
     Set<Event> findAllByIdIsIn(List<Long> id);
 
     List<Event> findAllByInitiatorId(Long userId, Pageable pageable);
 
-    @Query(value = "SELECT * FROM events " +
-            "WHERE (initiator_id IN :users OR :users IS NULL) AND state IN :states " +
+    @Query(value = "SELECT * FROM events WHERE (initiator_id IN :users OR :users IS NULL) AND state IN :states " +
             "AND (category_id IN :categories  OR :categories IS NULL) AND (event_date >= to_timestamp(:rangeStart, 'yyyy-mm-dd hh24:mi:ss')  " +
             "OR to_timestamp(:rangeStart, 'yyyy-mm-dd hh24:mi:ss') IS NULL) AND (event_date <= to_timestamp(:rangeEnd, 'yyyy-mm-dd hh24:mi:ss')   " +
             "OR to_timestamp(:rangeEnd, 'yyyy-mm-dd hh24:mi:ss') IS NULL) OFFSET :from LIMIT :size", nativeQuery = true)
@@ -72,4 +70,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                 @Param("size") Integer size);
 
     Optional<Event> findEventByIdAndStateIs(Long id, EventState state);
+
+    boolean existsByCategory(Category category);
 }

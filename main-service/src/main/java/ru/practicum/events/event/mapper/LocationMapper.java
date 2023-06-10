@@ -1,20 +1,19 @@
 package ru.practicum.events.event.mapper;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import ru.practicum.events.event.dto.LocationDto;
-import ru.practicum.events.event.model.Location;
+import ru.practicum.events.event.model.location.Location;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class LocationMapper {
-    public static Location toEntity(LocationDto locationDto) {
+@UtilityClass
+public class LocationMapper {
+    public Location locationDtoToLocation(LocationDto locationDto) {
         return Location.builder()
                 .lat(locationDto.getLat())
                 .lon(locationDto.getLon())
                 .build();
     }
 
-    public static LocationDto toDto(Location location) {
+    public LocationDto locationToLocationDto(Location location) {
         return LocationDto.builder()
                 .lat(location.getLat())
                 .lon(location.getLon())

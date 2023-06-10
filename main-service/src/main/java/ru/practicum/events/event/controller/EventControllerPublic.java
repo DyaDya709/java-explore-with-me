@@ -1,8 +1,10 @@
 package ru.practicum.events.event.controller;
 
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.events.event.dto.EventDto;
+import ru.practicum.events.event.dto.EventFullDto;
 import ru.practicum.events.event.dto.EventShortDto;
 import ru.practicum.events.event.service.EventServicePublic;
 
@@ -13,9 +15,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/events")
-@RequiredArgsConstructor
+@Slf4j
+@Validated
 public class EventControllerPublic {
     private final EventServicePublic eventServicePublic;
+
+    @Autowired
+    public EventControllerPublic(EventServicePublic eventServicePublic) {
+        this.eventServicePublic = eventServicePublic;
+    }
 
     @GetMapping()
     List<EventShortDto> getAllPublicEvents(@RequestParam(required = false) String text,
@@ -32,7 +40,7 @@ public class EventControllerPublic {
     }
 
     @GetMapping("/{id}")
-    EventDto getPublicEventById(@PathVariable Long id, HttpServletRequest request) {
+    EventFullDto getPublicEventById(@PathVariable Long id, HttpServletRequest request) {
         return eventServicePublic.getPublicEventById(id, request);
     }
 }

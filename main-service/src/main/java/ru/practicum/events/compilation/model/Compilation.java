@@ -7,19 +7,20 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * // Подборка событий
+ */
+@Getter
+@Setter
 @Builder
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "compilations", schema = "public")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Compilation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Long id;
-
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
             name = "compilation_events",
@@ -27,10 +28,8 @@ public class Compilation {
             inverseJoinColumns = {@JoinColumn(name = "event_id")}
     )
     private Set<Event> events = new HashSet<>();
-
     @Column(name = "pinned")
     private boolean pinned;
-
     @Column(name = "title")
     private String title;
 }

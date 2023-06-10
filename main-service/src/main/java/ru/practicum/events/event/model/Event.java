@@ -2,22 +2,25 @@ package ru.practicum.events.event.model;
 
 import lombok.*;
 import ru.practicum.category.model.Category;
-import ru.practicum.user.model.User;
+import ru.practicum.events.event.model.location.Location;
+import ru.practicum.users.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+/**
+ * События
+ */
+@Getter
+@Setter
 @Builder
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "events")
+@Table(name = "events", schema = "public")
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Long id;
     @Column(name = "annotation")
     private String annotation; // example: Эксклюзивность нашего шоу гарантирует привлечение максимальной зрительской аудитории Краткое описание
@@ -36,10 +39,6 @@ public class Event {
     @JoinColumn(name = "initiator_id")
     private User initiator; //Пользователь (краткая информация)
     @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "lat", column = @Column(name = "lat")),
-            @AttributeOverride(name = "lon", column = @Column(name = "lon"))
-    })
     private Location location; //Широта и долгота места проведения события
     @Column(name = "paid")
     private boolean paid; // Нужно ли оплачивать участие

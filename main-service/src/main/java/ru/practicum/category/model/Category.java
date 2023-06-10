@@ -4,17 +4,16 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "categories")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Table(name = "categories", schema = "public")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Long id;
     @Column(name = "name", unique = true)
     private String name;

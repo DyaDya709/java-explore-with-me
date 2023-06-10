@@ -1,7 +1,9 @@
 package ru.practicum.category.controller;
 
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.category.dto.CategoryDto;
 import ru.practicum.category.dto.NewCategoryDto;
@@ -11,9 +13,16 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/admin/categories")
-@RequiredArgsConstructor
+@Slf4j
+@Validated
 public class CategoryControllerAdmin {
     private final CategoryServiceAdmin service;
+
+
+    @Autowired
+    public CategoryControllerAdmin(CategoryServiceAdmin service) {
+        this.service = service;
+    }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
