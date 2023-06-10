@@ -1,7 +1,7 @@
 package ru.practicum.request.storage;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.practicum.event.model.Event;
+import ru.practicum.events.event.model.Event;
 import ru.practicum.request.model.Request;
 import ru.practicum.request.model.RequestStatus;
 import ru.practicum.user.model.User;
