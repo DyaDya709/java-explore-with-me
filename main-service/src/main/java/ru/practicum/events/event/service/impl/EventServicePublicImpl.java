@@ -15,6 +15,7 @@ import ru.practicum.events.event.model.EventState;
 import ru.practicum.events.event.service.EventServicePublic;
 import ru.practicum.events.event.storage.EventRepository;
 import ru.practicum.events.request.model.RequestStatus;
+import ru.practicum.exception.type.BadRequestException;
 import ru.practicum.exception.type.ResourceNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +50,8 @@ public class EventServicePublicImpl implements EventServicePublic {
         client.createHit(hitDto);
         List<Event> events = eventRepository.findAllByPublic(text, categories, paid, rangeStart, rangeEnd, sort, from, size);
         if (events.isEmpty()) {
-            return Collections.emptyList();
+            throw new BadRequestException("No events found");
+            //return Collections.emptyList();
         }
         List<Event> eventsAddViews = processingEvents.addViewsInEventsList(events, request);
         List<Event> newEvents = processingEvents.confirmedRequests(eventsAddViews);

@@ -62,7 +62,7 @@ public class RequestServicePrivateImpl implements RequestServicePrivate {
         checkEventRequestUser(userId, eventId);
         Request request;
 
-        if (event.isRequestModeration()) {
+        if (event.isRequestModeration() && event.getParticipantLimit() != 0) {
             request = Request.builder()
                     .created(LocalDateTime.now())
                     .event(event)

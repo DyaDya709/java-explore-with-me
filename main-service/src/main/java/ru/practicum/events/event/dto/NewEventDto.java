@@ -21,11 +21,12 @@ public class NewEventDto {
     LocationDto location; //Широта и долгота места проведения события
     @org.springframework.beans.factory.annotation.Value("false")
     boolean paid; // Нужно ли оплачивать участие
-    @org.springframework.beans.factory.annotation.Value("0")
     @PositiveOrZero
+    @org.springframework.beans.factory.annotation.Value("0")
     Integer participantLimit; // Ограничение на количество участников. Значение 0 - означает отсутствие ограничения
     @org.springframework.beans.factory.annotation.Value("true")
     boolean requestModeration; // Нужна ли пре-модерация заявок на участие
     @NotBlank(message = "Поле title должно быть заполнено")
+    @Size(min = 3, max = 120)
     String title; // example: Знаменитое шоу 'Летающая кукуруза' Заголовок
 }

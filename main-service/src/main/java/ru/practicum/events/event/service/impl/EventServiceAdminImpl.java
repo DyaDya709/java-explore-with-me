@@ -133,7 +133,7 @@ public class EventServiceAdminImpl implements EventServiceAdmin {
 
     private void eventAvailability(Event event) {
         if (event.getState().equals(EventState.PUBLISHED) || event.getState().equals(EventState.CANCELED)) {
-            throw new ForbiddenEventException("Статус события не позволяет редоктировать событие, статус: " + event.getState());
+            throw new ForbiddenEventException("Статус события не позволяет редактировать событие, статус: " + event.getState());
         }
     }
 

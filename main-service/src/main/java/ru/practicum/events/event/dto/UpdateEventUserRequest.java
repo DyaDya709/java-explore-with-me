@@ -24,6 +24,6 @@ public class UpdateEventUserRequest {
     Integer participantLimit;
     Boolean requestModeration;
     ActionStateDto stateAction;
-    @Size(min = 5, max = 255, message = "Минимальное кол-во символов для описания: 5. Максимальное: 255")
+    @Size(min = 3, max = 120, message = "Минимальное кол-во символов для описания: 3. Максимальное: 120")
     String title;
 }

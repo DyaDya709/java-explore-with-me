@@ -104,7 +104,7 @@ public class ApplicationExceptionsHandler {
     }
 
     @ExceptionHandler(ForbiddenEventException.class)
-    @ResponseStatus(code = HttpStatus.CONFLICT)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public ApiError handleForbiddenEventException(ForbiddenEventException e) {
         ApiError apiError = ApiError.builder()
                 .errors(Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList()))

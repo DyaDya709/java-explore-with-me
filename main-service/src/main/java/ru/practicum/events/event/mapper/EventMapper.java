@@ -69,7 +69,7 @@ public class EventMapper {
                 .initiator(user)
                 .location(LocationMapper.toEntity(newEventDto.getLocation()))
                 .paid(newEventDto.isPaid())
-                .participantLimit(newEventDto.getParticipantLimit())
+                .participantLimit(newEventDto.getParticipantLimit() == null ? 0 : newEventDto.getParticipantLimit())
                 .publishedOn(null)
                 .requestModeration(newEventDto.isRequestModeration())
                 .state(EventState.PENDING)
