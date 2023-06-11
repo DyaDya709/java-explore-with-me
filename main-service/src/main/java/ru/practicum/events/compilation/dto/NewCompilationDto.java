@@ -12,7 +12,7 @@ import java.util.List;
 public class NewCompilationDto { // Подборка событий
     List<Long> events;
     boolean pinned; // Закреплена ли подборка на главной странице сайта example: true
-    @Size(max = 500, message = "Максимальное кол-во символов для описания: 500")
-    @NotBlank(message = "title не может быть пустым")
+    @Size(max = 50)
+    @NotBlank
     String title; // Заголовок подборки example: Летние концерты
 }
