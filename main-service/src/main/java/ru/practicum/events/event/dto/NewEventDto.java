@@ -3,6 +3,7 @@ package ru.practicum.events.event.dto;
 import lombok.Builder;
 import lombok.Value;
 
+import javax.annotation.PostConstruct;
 import javax.validation.constraints.*;
 
 @Builder
@@ -29,4 +30,5 @@ public class NewEventDto {
     @NotBlank(message = "Поле title должно быть заполнено")
     @Size(min = 3, max = 120)
     String title; // example: Знаменитое шоу 'Летающая кукуруза' Заголовок
+
 }

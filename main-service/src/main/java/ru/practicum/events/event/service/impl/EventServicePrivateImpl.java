@@ -164,7 +164,7 @@ public class EventServicePrivateImpl implements EventServicePrivate {
         }
         if (event.getParticipantLimit() <= event.getConfirmedRequests()) {
             log.warn("Достигнут лимит по заявкам на данное событие с id= {}", eventId);
-            throw new ForbiddenEventException("Достигнут лимит по заявкам на данное событие с id= " + eventId);
+            throw new ConflictEventPublicationException("Достигнут лимит по заявкам на данное событие с id= " + eventId);
         }
         List<Request> requests = getAllRequestsContainsIds(eventRequest.getRequestIds());
         if (event.getParticipantLimit() == 0 || !event.isRequestModeration()) {
@@ -239,7 +239,7 @@ public class EventServicePrivateImpl implements EventServicePrivate {
     private EventRequestStatusUpdateResult considerationOfRequests(Event event, List<Request> requests) {
         List<ParticipationRequestDto> confirmedRequests = new ArrayList<>();
         List<ParticipationRequestDto> rejectedRequests = new ArrayList<>();
-        long count = processingEvents.countAllRequestsForOneEvent(event);
+        long count = processingEvents.countAllRequestsForOneEvent(event, RequestStatus.CONFIRMED);
         event.setConfirmedRequests(count);
         for (Request req : requests) {
             if (!req.getStatus().equals(RequestStatus.PENDING)) {
@@ -271,7 +271,7 @@ public class EventServicePrivateImpl implements EventServicePrivate {
     }
 
     private void addEventConfirmedRequestsAndViews(Event event, HttpServletRequest request) {
-        long count = processingEvents.countAllRequestsForOneEvent(event);
+        long count = processingEvents.countAllRequestsForOneEvent(event, RequestStatus.CONFIRMED);
         event.setConfirmedRequests(count);
         long views = processingEvents.searchViews(event, request);
         event.setViews(views);

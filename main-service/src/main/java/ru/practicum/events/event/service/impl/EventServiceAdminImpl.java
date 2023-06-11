@@ -15,6 +15,7 @@ import ru.practicum.events.event.model.Event;
 import ru.practicum.events.event.model.EventState;
 import ru.practicum.events.event.service.EventServiceAdmin;
 import ru.practicum.events.event.storage.EventRepository;
+import ru.practicum.events.request.model.RequestStatus;
 import ru.practicum.exception.type.BadRequestException;
 import ru.practicum.exception.type.ConflictEventPublicationException;
 import ru.practicum.exception.type.ForbiddenEventException;
@@ -138,7 +139,7 @@ public class EventServiceAdminImpl implements EventServiceAdmin {
     }
 
     private void addEventConfirmedRequestsAndViews(Event event, HttpServletRequest request) {
-        long count = processingEvents.countAllRequestsForOneEvent(event);
+        long count = processingEvents.countAllRequestsForOneEvent(event, RequestStatus.CONFIRMED);
         event.setConfirmedRequests(count);
         long views = processingEvents.searchViews(event, request);
         event.setViews(views);

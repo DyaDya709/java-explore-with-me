@@ -144,7 +144,7 @@ public class RequestServicePrivateImpl implements RequestServicePrivate {
     }
 
     private void addEventConfirmedRequestsAndViews(Event event, HttpServletRequest request) {
-        long count = processingEvents.countAllRequestsForOneEvent(event);
+        long count = processingEvents.countAllRequestsForOneEvent(event, RequestStatus.CONFIRMED);
         event.setConfirmedRequests(count);
         long views = processingEvents.searchViews(event, request);
         event.setViews(views);

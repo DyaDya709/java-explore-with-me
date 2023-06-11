@@ -71,8 +71,8 @@ public class ProcessingEvents {
         return newEvents;
     }
 
-    public long countAllRequestsForOneEvent(Event event) {
-        return requestRepository.countRequestByEvent(event);
+    public long countAllRequestsForOneEvent(Event event, RequestStatus status) {
+        return requestRepository.countRequestByEventAndStatus(event, status);
     }
 
     public long searchViews(Event event, HttpServletRequest request) {
