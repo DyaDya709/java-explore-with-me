@@ -14,6 +14,7 @@ import ru.practicum.events.compilation.service.CompilationServiceAdmin;
 @RequestMapping(path = "/admin/compilations")
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 public class CompilationControllerAdmin {
     private final CompilationServiceAdmin compilationServiceForAdmin;
 

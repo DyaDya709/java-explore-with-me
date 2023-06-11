@@ -23,6 +23,7 @@ import java.util.List;
 @RequestMapping("/users/{userId}/events")
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 public class EventControllerPrivate {
     private final EventServicePrivate eventServicePrivate;
 
