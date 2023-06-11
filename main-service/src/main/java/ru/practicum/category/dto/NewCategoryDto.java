@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Builder
 public class NewCategoryDto { // Данные для добавления новой категории
-    @Size(max = 255, message = "Максимальное кол-во символов для описания: 255")
-    @NotBlank(message = "Поле name не должно быть пустым")
+    @Size(max = 50)
+    @NotBlank
     private String name; // Название категории example: Концерты
 }

@@ -38,7 +38,7 @@ public class EventControllerPrivate {
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     EventFullDto addPrivateEventByUserId(@PathVariable Long userId,
-                                         @Valid @RequestBody NewEventDto newEventDto) {
+                                         @Validated @RequestBody NewEventDto newEventDto) {
         return eventServicePrivate.addPrivateEventByUserId(userId, newEventDto);
     }
 
