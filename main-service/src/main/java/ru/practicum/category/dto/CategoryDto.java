@@ -10,8 +10,8 @@ import javax.validation.constraints.Size;
 @Builder
 public class CategoryDto { // Категория
     Long id; // Идентификатор категории
-    @Size(max = 255, message = "Максимальное кол-во символов для описания: 255")
-    @NotBlank(message = "Поле name не должно быть пустым")
+    @Size(max = 50)
+    @NotBlank
     String name; // example: Концерты Название категории
 
     public CategoryDto(Long id, String name) {
