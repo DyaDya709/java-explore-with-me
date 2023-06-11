@@ -117,6 +117,20 @@ public class ApplicationExceptionsHandler {
         return apiError;
     }
 
+    @ExceptionHandler(ConflictEventPublicationException.class)
+    @ResponseStatus(code = HttpStatus.CONFLICT)
+    public ApiError handleConflictEventPublicationException(ConflictEventPublicationException e) {
+        ApiError apiError = ApiError.builder()
+                .errors(Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList()))
+                .message(e.getMessage())
+                .reason("For the requested operation the conditions are not met.")
+                .status("FORBIDDEN")
+                .timestamp(LocalDateTime.now())
+                .build();
+        log.warn(e.getMessage(), e);
+        return apiError;
+    }
+
     @ExceptionHandler(ValidationDateException.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public ApiError handleValidationDateException(ValidationDateException e) {

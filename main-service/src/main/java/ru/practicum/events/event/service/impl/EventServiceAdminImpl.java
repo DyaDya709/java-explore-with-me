@@ -17,6 +17,7 @@ import ru.practicum.events.event.service.EventServiceAdmin;
 import ru.practicum.events.event.storage.EventRepository;
 import ru.practicum.events.request.model.RequestStatus;
 import ru.practicum.exception.type.BadRequestException;
+import ru.practicum.exception.type.ConflictEventPublicationException;
 import ru.practicum.exception.type.ForbiddenEventException;
 import ru.practicum.exception.type.ResourceNotFoundException;
 import ru.practicum.util.DateFormatter;
@@ -133,7 +134,7 @@ public class EventServiceAdminImpl implements EventServiceAdmin {
 
     private void eventAvailability(Event event) {
         if (event.getState().equals(EventState.PUBLISHED) || event.getState().equals(EventState.CANCELED)) {
-            throw new ForbiddenEventException("Статус события не позволяет редактировать событие, статус: " + event.getState());
+            throw new ConflictEventPublicationException("Статус события не позволяет редактировать событие, статус: " + event.getState());
         }
     }
 
