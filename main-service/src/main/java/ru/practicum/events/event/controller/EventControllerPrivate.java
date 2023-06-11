@@ -15,7 +15,6 @@ import ru.practicum.events.request.dto.EventRequestStatusUpdateResult;
 import ru.practicum.events.request.dto.ParticipationRequestDto;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;

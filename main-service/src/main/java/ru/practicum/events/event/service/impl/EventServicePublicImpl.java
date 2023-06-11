@@ -14,14 +14,12 @@ import ru.practicum.events.event.model.Event;
 import ru.practicum.events.event.model.EventState;
 import ru.practicum.events.event.service.EventServicePublic;
 import ru.practicum.events.event.storage.EventRepository;
-import ru.practicum.events.request.model.RequestStatus;
 import ru.practicum.exception.type.BadRequestException;
 import ru.practicum.exception.type.ResourceNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,7 +82,7 @@ public class EventServicePublicImpl implements EventServicePublic {
     }
 
     private void addEventConfirmedRequestsAndViews(Event event, HttpServletRequest request) {
-        long count = processingEvents.confirmedRequestsForOneEvent(event, RequestStatus.CONFIRMED);
+        long count = processingEvents.countAllRequestsForOneEvent(event);
         event.setConfirmedRequests(count);
         long views = processingEvents.searchViews(event, request);
         event.setViews(views);

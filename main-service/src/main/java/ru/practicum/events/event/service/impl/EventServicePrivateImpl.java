@@ -27,10 +27,7 @@ import ru.practicum.events.request.mapper.RequestMapper;
 import ru.practicum.events.request.model.Request;
 import ru.practicum.events.request.model.RequestStatus;
 import ru.practicum.events.request.storage.RequestRepository;
-import ru.practicum.exception.type.BadRequestException;
-import ru.practicum.exception.type.ConflictRequestException;
-import ru.practicum.exception.type.ForbiddenEventException;
-import ru.practicum.exception.type.ResourceNotFoundException;
+import ru.practicum.exception.type.*;
 import ru.practicum.users.model.User;
 import ru.practicum.users.storage.UserRepository;
 import ru.practicum.util.DateFormatter;
@@ -218,7 +215,7 @@ public class EventServicePrivateImpl implements EventServicePrivate {
 
     private void eventAvailability(Event event) {
         if (event.getState().equals(EventState.PUBLISHED)) {
-            throw new ForbiddenEventException("Статус события не позволяет редоктировать событие, статус: " + event.getState());
+            throw new ConflictEventPublicationException("Статус события не позволяет редактировать событие, статус: " + event.getState());
         }
     }
 
@@ -242,7 +239,7 @@ public class EventServicePrivateImpl implements EventServicePrivate {
     private EventRequestStatusUpdateResult considerationOfRequests(Event event, List<Request> requests) {
         List<ParticipationRequestDto> confirmedRequests = new ArrayList<>();
         List<ParticipationRequestDto> rejectedRequests = new ArrayList<>();
-        long count = processingEvents.confirmedRequestsForOneEvent(event, RequestStatus.CONFIRMED);
+        long count = processingEvents.countAllRequestsForOneEvent(event);
         event.setConfirmedRequests(count);
         for (Request req : requests) {
             if (!req.getStatus().equals(RequestStatus.PENDING)) {
@@ -274,7 +271,7 @@ public class EventServicePrivateImpl implements EventServicePrivate {
     }
 
     private void addEventConfirmedRequestsAndViews(Event event, HttpServletRequest request) {
-        long count = processingEvents.confirmedRequestsForOneEvent(event, RequestStatus.CONFIRMED);
+        long count = processingEvents.countAllRequestsForOneEvent(event);
         event.setConfirmedRequests(count);
         long views = processingEvents.searchViews(event, request);
         event.setViews(views);
