@@ -3,7 +3,6 @@ package ru.practicum.events.event.dto;
 import lombok.Builder;
 import lombok.Value;
 
-import javax.annotation.PostConstruct;
 import javax.validation.constraints.*;
 
 @Builder
@@ -20,15 +19,11 @@ public class NewEventDto {
     @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}", message = "Invalid date format")
     String eventDate;
     LocationDto location; //Широта и долгота места проведения события
-    @org.springframework.beans.factory.annotation.Value("false")
-    boolean paid; // Нужно ли оплачивать участие
+    Boolean paid; // Нужно ли оплачивать участие
     @PositiveOrZero
-    @org.springframework.beans.factory.annotation.Value("0")
     Integer participantLimit; // Ограничение на количество участников. Значение 0 - означает отсутствие ограничения
-    @org.springframework.beans.factory.annotation.Value("true")
-    boolean requestModeration; // Нужна ли пре-модерация заявок на участие
+    Boolean requestModeration; // Нужна ли пре-модерация заявок на участие
     @NotBlank(message = "Поле title должно быть заполнено")
     @Size(min = 3, max = 120)
     String title; // example: Знаменитое шоу 'Летающая кукуруза' Заголовок
-
 }

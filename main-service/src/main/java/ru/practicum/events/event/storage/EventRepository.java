@@ -34,12 +34,26 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                @Param("from") Integer from,
                                @Param("size") Integer size);
 
+    //    @Query(value = "SELECT * " +
+//            "FROM events " +
+//            "WHERE (initiator_id IN :users OR :users IS NULL) " +
+//            "AND (category_id IN :categories  OR :categories IS NULL) " +
+//            "AND (event_date >= to_timestamp(:rangeStart, 'yyyy-mm-dd hh24:mi:ss')  OR to_timestamp(:rangeStart, 'yyyy-mm-dd hh24:mi:ss') IS NULL) " +
+//            "AND (event_date <= to_timestamp(:rangeEnd, 'yyyy-mm-dd hh24:mi:ss')   OR to_timestamp(:rangeEnd, 'yyyy-mm-dd hh24:mi:ss') IS NULL) " +
+//            "OFFSET :from " +
+//            "LIMIT :size", nativeQuery = true)
+//    List<Event> findAllByAdminAndState(@Param("users") List<Long> users,
+//                                       @Param("categories") List<Long> categories,
+//                                       @Param("rangeStart") LocalDateTime rangeStart,
+//                                       @Param("rangeEnd") LocalDateTime rangeEnd,
+//                                       @Param("from") Integer from,
+//                                       @Param("size") Integer size);
     @Query(value = "SELECT * " +
             "FROM events " +
-            "WHERE (initiator_id IN :users OR :users IS NULL) " +
-            "AND (category_id IN :categories  OR :categories IS NULL) " +
-            "AND (event_date >= to_timestamp(:rangeStart, 'yyyy-mm-dd hh24:mi:ss')  OR to_timestamp(:rangeStart, 'yyyy-mm-dd hh24:mi:ss') IS NULL) " +
-            "AND (event_date <= to_timestamp(:rangeEnd, 'yyyy-mm-dd hh24:mi:ss')   OR to_timestamp(:rangeEnd, 'yyyy-mm-dd hh24:mi:ss') IS NULL) " +
+            "WHERE (:users IS NULL OR initiator_id IN :users) " +
+            "AND (:categories IS NULL OR category_id IN :categories) " +
+            "AND (:rangeStart IS NULL OR event_date >= to_timestamp(:rangeStart, 'yyyy-mm-dd hh24:mi:ss')) " +
+            "AND (:rangeEnd IS NULL OR event_date <= to_timestamp(:rangeEnd, 'yyyy-mm-dd hh24:mi:ss')) " +
             "OFFSET :from " +
             "LIMIT :size", nativeQuery = true)
     List<Event> findAllByAdminAndState(@Param("users") List<Long> users,
