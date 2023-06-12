@@ -30,7 +30,7 @@ public class UserServiceAdminImpl implements UserServiceAdmin {
     public List<UserDto> getAllUsersByIds(List<Long> ids, int from, int size) {
         log.info("Получен запрос на получение всех пользователей по id");
         Pageable pageable = PageRequest.of(from, size);
-        List<User> users = new ArrayList<>();
+        List<User> users;
         if (ids != null && !ids.isEmpty()) {
             users = userRepository.findAllUsersByIds(ids, pageable);
         } else {
