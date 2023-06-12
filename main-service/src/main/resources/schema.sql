@@ -1,14 +1,14 @@
-drop table if exists requests cascade;
-
-drop table if exists compilation_events cascade;
-
-drop table if exists events cascade;
-
-drop table if exists users cascade;
-
-drop table if exists categories cascade;
-
-drop table if exists compilations cascade;
+-- drop table if exists requests cascade;
+--
+-- drop table if exists compilation_events cascade;
+--
+-- drop table if exists events cascade;
+--
+-- drop table if exists users cascade;
+--
+-- drop table if exists categories cascade;
+--
+-- drop table if exists compilations cascade;
 
 
 CREATE TABLE IF NOT EXISTS users(

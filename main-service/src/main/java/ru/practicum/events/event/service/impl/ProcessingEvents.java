@@ -60,7 +60,7 @@ public class ProcessingEvents {
         List<Event> newEvents = new ArrayList<>();
         if (!requestsPerEvent.isEmpty()) {
             for (Event e : events) {
-                long count = requestsPerEvent.get(e);
+                Long count = requestsPerEvent.get(e);
                 e.setConfirmedRequests(count);
                 newEvents.add(e);
             }
@@ -84,12 +84,15 @@ public class ProcessingEvents {
     }
 
     private LocalDateTime findStartDateTime(List<Event> events) {
-        LocalDateTime start;
-        Event event = events.stream().sorted(Comparator.comparing(Event::getPublishedOn)).collect(Collectors.toList()).get(0);
-        if (event.getPublishedOn() == null) {
-            start = LocalDateTime.of(LocalDate.of(1900, 1, 1), LocalTime.of(0, 0, 1));
-        } else {
-            start = event.getPublishedOn();
+        List<Event> sortedEvents = events.stream()
+                .sorted(Comparator.comparing(Event::getPublishedOn, Comparator.nullsFirst(Comparator.naturalOrder())))
+                .collect(Collectors.toList());
+        LocalDateTime start = LocalDateTime.of(LocalDate.of(1900, 1, 1), LocalTime.of(0, 0, 1));
+        if (!sortedEvents.isEmpty()) {
+            Event event = sortedEvents.get(0);
+            if (event.getPublishedOn() != null) {
+                start = event.getPublishedOn();
+            }
         }
         return start;
     }

@@ -68,7 +68,7 @@ public class EventMapper {
                 .eventDate(DateFormatter.formatDate(newEventDto.getEventDate()))
                 .initiator(user)
                 .location(LocationMapper.toEntity(newEventDto.getLocation()))
-                .paid(newEventDto.getPaid() == null ?false : newEventDto.getPaid())
+                .paid(newEventDto.getPaid() == null ? false : newEventDto.getPaid())
                 .participantLimit(newEventDto.getParticipantLimit() == null ? 0 : newEventDto.getParticipantLimit())
                 .publishedOn(null)
                 .requestModeration(newEventDto.getRequestModeration() == null ? true : newEventDto.getRequestModeration())

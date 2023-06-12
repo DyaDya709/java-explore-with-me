@@ -3,6 +3,8 @@ package ru.practicum.events.event.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.storage.CategoryRepository;
@@ -25,7 +27,6 @@ import ru.practicum.util.DateFormatter;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,7 @@ public class EventServiceAdminImpl implements EventServiceAdmin {
     public List<EventFullDto> getAllEventsForAdmin(List<Long> users, List<String> states, List<Long> categories,
                                                    String rangeStart, String rangeEnd, int from, int size, HttpServletRequest request) {
         log.info("Получен запрос на поиск всех событый (администратором)");
-        List<Event> events = new ArrayList<>();
+        List<Event> events;
         LocalDateTime newRangeStart = null;
         if (rangeStart != null) {
             newRangeStart = DateFormatter.formatDate(rangeStart);
@@ -50,14 +51,15 @@ public class EventServiceAdminImpl implements EventServiceAdmin {
         if (rangeEnd != null) {
             newRangeEnd = DateFormatter.formatDate(rangeEnd);
         }
-
+        Pageable page = PageRequest.of(from / size, size);
         if (states != null) {
-            events = eventRepository.findAllByAdmin(users, states, categories, newRangeStart, newRangeEnd, from, size);
+            List<EventState> eventStates = states.stream().map((s) -> EventState.valueOf(s)).collect(Collectors.toList());
+            events = eventRepository.findAllByAdminAndState(users, eventStates, categories, newRangeStart, newRangeEnd, page);
             List<Event> eventsAddViews = processingEvents.addViewsInEventsList(events, request);
             List<Event> newEvents = processingEvents.confirmedRequests(eventsAddViews);
             return newEvents.stream().map(EventMapper::toDto).collect(Collectors.toList());
         } else {
-            events = eventRepository.findAllByAdminAndState(users, categories, newRangeStart, newRangeEnd, from, size);
+            events = eventRepository.findAllByAdmin(users, categories, newRangeStart, newRangeEnd, page);
             List<Event> eventsAddViews = processingEvents.addViewsInEventsList(events, request);
             List<Event> newEvents = processingEvents.confirmedRequests(eventsAddViews);
             return newEvents.stream().map(EventMapper::toDto).collect(Collectors.toList());
