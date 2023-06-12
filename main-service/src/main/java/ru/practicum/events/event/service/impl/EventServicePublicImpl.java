@@ -24,6 +24,7 @@ import ru.practicum.util.DateFormatter;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,7 +62,7 @@ public class EventServicePublicImpl implements EventServicePublic {
         }
         List<Event> events = eventRepository.findAllByPublic(text, categories, paid, newRangeStart, newRangeEnd, page);
         if (events.isEmpty()) {
-            throw new BadRequestException("No events found");
+            return Collections.emptyList();
         }
         List<Event> eventsAddViews = processingEvents.addViewsInEventsList(events, request);
         List<Event> newEvents = processingEvents.confirmedRequests(eventsAddViews);
