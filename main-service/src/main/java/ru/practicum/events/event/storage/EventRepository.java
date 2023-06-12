@@ -16,12 +16,6 @@ import java.util.Set;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
-    List<Event> findEventByCategoryIs(Category category);
-
-    Set<Event> findAllByIdIsIn(List<Long> id);
-
-    List<Event> findAllByInitiatorId(Long userId, Pageable pageable);
-
 
     @Query("SELECT e FROM Event e " +
             "WHERE (e.initiator.id IN (:users) OR :users = NULL) " +
@@ -65,4 +59,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                 Pageable page);
 
     Optional<Event> findEventByIdAndStateIs(Long id, EventState state);
+
+    List<Event> findEventByCategoryIs(Category category);
+
+    Set<Event> findAllByIdIsIn(List<Long> id);
+
+    List<Event> findAllByInitiatorId(Long userId, Pageable pageable);
 }

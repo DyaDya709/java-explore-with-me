@@ -10,9 +10,9 @@ import ru.practicum.events.event.dto.stateDto.ActionStateDto;
 import ru.practicum.events.event.model.Event;
 import ru.practicum.events.event.model.EventState;
 import ru.practicum.exception.type.BadRequestException;
+import ru.practicum.formatter.DateFormatter;
 import ru.practicum.users.mapper.UserMapper;
 import ru.practicum.users.model.User;
-import ru.practicum.util.DateFormatter;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -56,8 +56,8 @@ public class EventMapper {
                 .build();
     }
 
-    public static Event newEventDtoToCreateEvent(NewEventDto newEventDto, User user, Category category, Long views,
-                                                 Long confirmedRequests) {
+    public static Event createEvent(NewEventDto newEventDto, User user, Category category, Long views,
+                                    Long confirmedRequests) {
         LocalDateTime dateTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         return Event.builder()
                 .annotation(newEventDto.getAnnotation())

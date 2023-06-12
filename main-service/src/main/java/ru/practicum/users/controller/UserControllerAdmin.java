@@ -1,7 +1,6 @@
 package ru.practicum.users.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/admin/users")
-@Slf4j
 @RequiredArgsConstructor
-@Validated
 public class UserControllerAdmin {
     private final UserServiceAdmin userServiceAdmin;
 
@@ -31,8 +28,8 @@ public class UserControllerAdmin {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    UserDto addUser(@Validated @RequestBody NewUserRequest newUserRequest) {
-        return userServiceAdmin.addUser(newUserRequest);
+    UserDto createUser(@Validated @RequestBody NewUserRequest newUserRequest) {
+        return userServiceAdmin.createUser(newUserRequest);
     }
 
     @DeleteMapping("/{userId}")

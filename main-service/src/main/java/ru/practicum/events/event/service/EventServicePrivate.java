@@ -14,7 +14,7 @@ import java.util.List;
 public interface EventServicePrivate {
     List<EventShortDto> getAllPrivateEventsByUserId(Long userId, int from, int size, HttpServletRequest request);
 
-    EventFullDto addPrivateEventByUserId(Long userId, NewEventDto newEventDto);
+    EventFullDto createPrivateEventByUserId(Long userId, NewEventDto newEventDto);
 
     EventFullDto getPrivateEventByIdAndByUserId(Long userId, Long eventId, HttpServletRequest request);
 

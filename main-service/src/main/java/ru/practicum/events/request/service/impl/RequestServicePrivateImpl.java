@@ -1,9 +1,9 @@
 package ru.practicum.events.request.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.events.event.model.Event;
 import ru.practicum.events.event.model.EventState;
 import ru.practicum.events.event.service.impl.ProcessingEvents;
@@ -28,7 +28,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class RequestServicePrivateImpl implements RequestServicePrivate {
     private final UserRepository userRepository;
@@ -38,16 +37,15 @@ public class RequestServicePrivateImpl implements RequestServicePrivate {
 
     @Override
     public List<ParticipationRequestDto> getAllRequestsUserById(Long userId) {
-        log.info("Получен запрос на получение всех запросов пользователя с id= " + userId);
         User user = getUserById(userId);
         List<Request> requests = requestRepository.findAllByRequesterIs(user);
         return requests.stream().map(RequestMapper::requestToParticipationRequestDto)
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
-    public ParticipationRequestDto addRequestEventById(Long userId, Long eventId, HttpServletRequest httpServletRequest) {
-        log.info("Получен запрос на добавление запроса от пользователя с id= {} для события с id= {}", userId, eventId);
+    public ParticipationRequestDto createRequestEventById(Long userId, Long eventId, HttpServletRequest httpServletRequest) {
         User user = getUserById(userId);
         Event event = getEventById(eventId);
         if (event.getState().equals(EventState.PUBLISHED)) {
@@ -87,9 +85,9 @@ public class RequestServicePrivateImpl implements RequestServicePrivate {
         }
     }
 
+    @Transactional
     @Override
     public ParticipationRequestDto updateRequestStatus(Long userId, Long requestId, HttpServletRequest httpServletRequest) {
-        log.info("Получен запрос от пользователя с id= {} на обновление запроса с id= {}", userId, requestId);
         User user = getUserById(userId);
         Request request = getRequestById(requestId);
         if (!request.getRequester().equals(user)) {
@@ -144,7 +142,7 @@ public class RequestServicePrivateImpl implements RequestServicePrivate {
     }
 
     private void addEventConfirmedRequestsAndViews(Event event, HttpServletRequest request) {
-        long count = processingEvents.countAllRequestsForOneEvent(event, RequestStatus.CONFIRMED);
+        long count = processingEvents.getCountAllRequestsForOneEvent(event, RequestStatus.CONFIRMED);
         event.setConfirmedRequests(count);
         long views = processingEvents.searchViews(event, request);
         event.setViews(views);

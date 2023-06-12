@@ -1,9 +1,9 @@
 package ru.practicum.users.dto;
 
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
 
-@Value
+@Data
 @Builder
 public class UserDto {
     String email;

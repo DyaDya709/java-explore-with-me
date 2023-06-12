@@ -1,11 +1,11 @@
 package ru.practicum.users.dto;
 
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
 
-@Value
+@Data
 @Builder
 public class UserShortDto {
     Long id;
-    String name; // example: Фёдоров Матвей
+    String name;
 }

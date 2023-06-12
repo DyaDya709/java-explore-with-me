@@ -1,18 +1,18 @@
 package ru.practicum.events.compilation.dto;
 
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-@Value
+@Data
 @Builder
-public class NewCompilationDto { // Подборка событий
+public class NewCompilationDto {
     List<Long> events;
-    boolean pinned; // Закреплена ли подборка на главной странице сайта example: true
+    boolean pinned;
     @Size(max = 50)
     @NotBlank
-    String title; // Заголовок подборки example: Летние концерты
+    String title;
 }

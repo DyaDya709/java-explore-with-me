@@ -1,6 +1,6 @@
 package ru.practicum.advice;
 
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -17,8 +17,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
-@Slf4j
 public class ApplicationExceptionsHandler {
+
+    @ExceptionHandler(DataAccessException.class)
+    @ResponseStatus(code = HttpStatus.CONFLICT)
+    public ApiError handleResourceNotFoundException(DataAccessException e) {
+        ApiError apiError = ApiError.builder()
+                .errors(Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList()))
+                .message(e.getMessage())
+                .reason("Conflicted")
+                .status("Conflicted")
+                .timestamp(LocalDateTime.now())
+                .build();
+        return apiError;
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ApiError handleResourceNotFoundException(ResourceNotFoundException e) {
@@ -29,7 +42,6 @@ public class ApplicationExceptionsHandler {
                 .status("NOT_FOUND")
                 .timestamp(LocalDateTime.now())
                 .build();
-        log.warn(e.getMessage(), e);
         return apiError;
     }
 
@@ -43,7 +55,6 @@ public class ApplicationExceptionsHandler {
                 .status("BAD_REQUEST")
                 .timestamp(LocalDateTime.now())
                 .build();
-        log.warn(e.getMessage(), e);
         return apiError;
     }
 
@@ -57,7 +68,6 @@ public class ApplicationExceptionsHandler {
                 .status("CONFLICT")
                 .timestamp(LocalDateTime.now())
                 .build();
-        log.warn(e.getMessage(), e);
         return apiError;
     }
 
@@ -71,7 +81,6 @@ public class ApplicationExceptionsHandler {
                 .status("CONFLICT")
                 .timestamp(LocalDateTime.now())
                 .build();
-        log.warn(e.getMessage(), e);
         return apiError;
     }
 
@@ -85,7 +94,6 @@ public class ApplicationExceptionsHandler {
                 .status("CONFLICT")
                 .timestamp(LocalDateTime.now())
                 .build();
-        log.warn(e.getMessage(), e);
         return apiError;
     }
 
@@ -99,7 +107,6 @@ public class ApplicationExceptionsHandler {
                 .status("CONFLICT")
                 .timestamp(LocalDateTime.now())
                 .build();
-        log.warn(e.getMessage(), e);
         return apiError;
     }
 
@@ -113,7 +120,6 @@ public class ApplicationExceptionsHandler {
                 .status("FORBIDDEN")
                 .timestamp(LocalDateTime.now())
                 .build();
-        log.warn(e.getMessage(), e);
         return apiError;
     }
 
@@ -127,7 +133,6 @@ public class ApplicationExceptionsHandler {
                 .status("FORBIDDEN")
                 .timestamp(LocalDateTime.now())
                 .build();
-        log.warn(e.getMessage(), e);
         return apiError;
     }
 
@@ -141,7 +146,6 @@ public class ApplicationExceptionsHandler {
                 .status("BAD_REQUEST")
                 .timestamp(LocalDateTime.now())
                 .build();
-        log.warn("Incorrectly made request: {}", e.getMessage(), e);
         return apiError;
     }
 
@@ -161,7 +165,6 @@ public class ApplicationExceptionsHandler {
                 .status(HttpStatus.BAD_REQUEST.toString())
                 .timestamp(LocalDateTime.now())
                 .build();
-        log.warn("Validation failed for some fields: {}", e.getMessage(), e);
         return apiError;
     }
 
@@ -175,7 +178,6 @@ public class ApplicationExceptionsHandler {
                 .status(HttpStatus.BAD_REQUEST.toString())
                 .timestamp(LocalDateTime.now())
                 .build();
-        log.warn("Validation failed for some fields: {}", e.getMessage(), e);
         return apiError;
     }
 
@@ -189,7 +191,6 @@ public class ApplicationExceptionsHandler {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.toString())
                 .timestamp(LocalDateTime.now())
                 .build();
-        log.warn("Unexpected error occurred: {}", ex.getMessage(), ex);
         return apiError;
     }
 }

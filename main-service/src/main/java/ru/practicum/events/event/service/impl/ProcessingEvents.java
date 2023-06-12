@@ -5,7 +5,6 @@ import explorewithme.dto.StatDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.events.event.model.Event;
-import ru.practicum.events.event.storage.EventRepository;
 import ru.practicum.events.request.model.Request;
 import ru.practicum.events.request.model.RequestStatus;
 import ru.practicum.events.request.storage.RequestRepository;
@@ -24,13 +23,11 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProcessingEvents {
-    private final EventRepository eventRepository;
     private final RequestRepository requestRepository;
     private final HttpClient client;
 
     public List<Event> addViewsInEventsList(List<Event> events, HttpServletRequest request) {
         List<String> uris = events.stream().map(e -> request.getRequestURI() + "/" + e.getId()).collect(Collectors.toList());
-        // List<Event> newEvents = confirmedRequests(events);
         LocalDateTime start = findStartDateTime(events);
         LocalDateTime end = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         List<StatDto> stats = client.getStats(start, end, uris, true);
@@ -71,7 +68,7 @@ public class ProcessingEvents {
         return newEvents;
     }
 
-    public long countAllRequestsForOneEvent(Event event, RequestStatus status) {
+    public long getCountAllRequestsForOneEvent(Event event, RequestStatus status) {
         return requestRepository.countRequestByEventAndStatus(event, status);
     }
 

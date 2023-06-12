@@ -5,7 +5,7 @@ import ru.practicum.events.compilation.dto.NewCompilationDto;
 import ru.practicum.events.compilation.dto.UpdateCompilationRequest;
 
 public interface CompilationServiceAdmin {
-    CompilationDto addCompilation(NewCompilationDto newCompilationDto);
+    CompilationDto createCompilation(NewCompilationDto newCompilationDto);
 
     void deleteCompilationById(Long compId);
 

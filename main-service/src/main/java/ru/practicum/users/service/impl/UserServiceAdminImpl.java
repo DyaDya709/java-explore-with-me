@@ -1,11 +1,11 @@
 package ru.practicum.users.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.exception.type.BadRequestException;
 import ru.practicum.exception.type.ConflictNameAndEmailException;
 import ru.practicum.exception.type.ResourceNotFoundException;
@@ -20,27 +20,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class UserServiceAdminImpl implements UserServiceAdmin {
     private final UserRepository userRepository;
 
+    @Transactional
     @Override
-    public List<UserDto> getAllUsersByIds(List<Long> ids, int from, int size) {
-        log.info("Получен запрос на получение всех пользователей по id");
-        Pageable pageable = PageRequest.of(from, size);
-        List<User> users;
-        if (ids != null && !ids.isEmpty()) {
-            users = userRepository.findAllUsersByIds(ids, pageable);
-        } else {
-            users = userRepository.findAllBy(pageable);
-        }
-        return users.stream().map(UserMapper::toDto).collect(Collectors.toList());
-    }
-
-    @Override
-    public UserDto addUser(NewUserRequest newUserRequest) {
-        log.info("Получен запрос на добавление пользователя {}", newUserRequest);
+    public UserDto createUser(NewUserRequest newUserRequest) {
         User user = UserMapper.newUserRequestToUser(newUserRequest);
         try {
             return UserMapper.toDto(userRepository.save(user));
@@ -53,8 +39,20 @@ public class UserServiceAdminImpl implements UserServiceAdmin {
     }
 
     @Override
+    public List<UserDto> getAllUsersByIds(List<Long> ids, int from, int size) {
+        Pageable pageable = PageRequest.of(from, size);
+        List<User> users;
+        if (ids != null && !ids.isEmpty()) {
+            users = userRepository.findAllByIdIn(ids, pageable);
+        } else {
+            users = userRepository.findAllBy(pageable);
+        }
+        return users.stream().map(UserMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
     public void deleteUserById(Long userId) {
-        log.info("Получен запрос на удаления пользователя  по id= {}", userId);
         User user = getUserById(userId);
         userRepository.delete(user);
     }

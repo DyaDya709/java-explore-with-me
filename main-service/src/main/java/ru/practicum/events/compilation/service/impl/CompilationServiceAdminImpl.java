@@ -1,8 +1,8 @@
 package ru.practicum.events.compilation.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.events.compilation.dto.CompilationDto;
 import ru.practicum.events.compilation.dto.NewCompilationDto;
 import ru.practicum.events.compilation.dto.UpdateCompilationRequest;
@@ -19,15 +19,14 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class CompilationServiceAdminImpl implements CompilationServiceAdmin {
     private final CompilationStorage compilationStorage;
     private final EventRepository eventRepository;
 
+    @Transactional
     @Override
-    public CompilationDto addCompilation(NewCompilationDto newCompilationDto) {
-        log.info("Получен запрос на добавление подборки событий {}", newCompilationDto);
+    public CompilationDto createCompilation(NewCompilationDto newCompilationDto) {
         Set<Event> events = new HashSet<>();
         if (newCompilationDto.getEvents() != null && !newCompilationDto.getEvents().isEmpty()) {
             events = addEvents(newCompilationDto.getEvents());
@@ -36,18 +35,18 @@ public class CompilationServiceAdminImpl implements CompilationServiceAdmin {
         return CompilationMapper.toDto(compilationStorage.save(compilation));
     }
 
+    @Transactional
     @Override
     public void deleteCompilationById(Long compId) {
-        log.info("Получен запрос на удаление подборки событий по id= {}", compId);
         if (!compilationStorage.existsById(compId)) {
             throw new ResourceNotFoundException("Подборка событий c id = " + compId + " не найдена");
         }
         compilationStorage.deleteById(compId);
     }
 
+    @Transactional
     @Override
     public CompilationDto updateCompilationById(Long compId, UpdateCompilationRequest updateCompilationRequest) {
-        log.info("Получен запрос на обновление подборки событий по id= {}", compId);
         Compilation newCompilation = getCompilationById(compId);
         Set<Event> events;
         if (updateCompilationRequest.getEvents() != null) {

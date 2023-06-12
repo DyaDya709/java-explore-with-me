@@ -1,11 +1,11 @@
 package ru.practicum.events.event.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.storage.CategoryRepository;
 import ru.practicum.events.event.dto.EventFullDto;
@@ -22,7 +22,7 @@ import ru.practicum.exception.type.BadRequestException;
 import ru.practicum.exception.type.ConflictEventPublicationException;
 import ru.practicum.exception.type.ForbiddenEventException;
 import ru.practicum.exception.type.ResourceNotFoundException;
-import ru.practicum.util.DateFormatter;
+import ru.practicum.formatter.DateFormatter;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class EventServiceAdminImpl implements EventServiceAdmin {
     private final EventRepository eventRepository;
@@ -41,7 +40,6 @@ public class EventServiceAdminImpl implements EventServiceAdmin {
     @Override
     public List<EventFullDto> getAllEventsForAdmin(List<Long> users, List<String> states, List<Long> categories,
                                                    String rangeStart, String rangeEnd, int from, int size, HttpServletRequest request) {
-        log.info("Получен запрос на поиск всех событый (администратором)");
         List<Event> events;
         LocalDateTime newRangeStart = null;
         if (rangeStart != null) {
@@ -66,9 +64,9 @@ public class EventServiceAdminImpl implements EventServiceAdmin {
         }
     }
 
+    @Transactional
     @Override
     public EventFullDto updateEventById(Long eventId, UpdateEventAdminRequest updateEvent, HttpServletRequest request) {
-        log.info("Получен запрос на обновление события с id= {} (администратором)", eventId);
         Event event = getEventById(eventId);
         eventAvailability(event);
         if (updateEvent.getEventDate() != null) {
@@ -141,7 +139,7 @@ public class EventServiceAdminImpl implements EventServiceAdmin {
     }
 
     private void addEventConfirmedRequestsAndViews(Event event, HttpServletRequest request) {
-        long count = processingEvents.countAllRequestsForOneEvent(event, RequestStatus.CONFIRMED);
+        long count = processingEvents.getCountAllRequestsForOneEvent(event, RequestStatus.CONFIRMED);
         event.setConfirmedRequests(count);
         long views = processingEvents.searchViews(event, request);
         event.setViews(views);

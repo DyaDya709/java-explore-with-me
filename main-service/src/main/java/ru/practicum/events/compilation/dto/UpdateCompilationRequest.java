@@ -1,16 +1,16 @@
 package ru.practicum.events.compilation.dto;
 
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
 
 import javax.validation.constraints.Size;
 import java.util.List;
 
+@Data
 @Builder
-@Value
-public class UpdateCompilationRequest { //Изменение информации о подборке событий. Если поле в запросе не указано (равно null) - значит изменение этих данных не треубется.
-    List<Long> events; //Список id событий подборки для полной замены текущего списка
-    Boolean pinned; //Закреплена ли подборка на главной странице сайта
+public class UpdateCompilationRequest {
+    List<Long> events;
+    Boolean pinned;
     @Size(max = 50)
-    String title; // Заголовок подборки
+    String title;
 }

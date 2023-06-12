@@ -8,7 +8,7 @@ import java.util.List;
 public interface RequestServicePrivate {
     List<ParticipationRequestDto> getAllRequestsUserById(Long userId);
 
-    ParticipationRequestDto addRequestEventById(Long userId, Long eventId, HttpServletRequest request);
+    ParticipationRequestDto createRequestEventById(Long userId, Long eventId, HttpServletRequest request);
 
     ParticipationRequestDto updateRequestStatus(Long userId, Long requestId, HttpServletRequest request);
 }

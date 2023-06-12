@@ -1,11 +1,11 @@
 package ru.practicum.events.event.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.storage.CategoryRepository;
 import ru.practicum.events.event.dto.EventFullDto;
@@ -28,9 +28,9 @@ import ru.practicum.events.request.model.Request;
 import ru.practicum.events.request.model.RequestStatus;
 import ru.practicum.events.request.storage.RequestRepository;
 import ru.practicum.exception.type.*;
+import ru.practicum.formatter.DateFormatter;
 import ru.practicum.users.model.User;
 import ru.practicum.users.storage.UserRepository;
-import ru.practicum.util.DateFormatter;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -40,7 +40,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class EventServicePrivateImpl implements EventServicePrivate {
     private final EventRepository eventRepository;
@@ -51,7 +50,6 @@ public class EventServicePrivateImpl implements EventServicePrivate {
 
     @Override
     public List<EventShortDto> getAllPrivateEventsByUserId(Long userId, int from, int size, HttpServletRequest request) {
-        log.info("Получен запрос на получение всех событий для пользователя с id= {}  (приватный)", userId);
         if (!userRepository.existsById(userId)) {
             throw new ResourceNotFoundException("Пользователь c id = " + userId + " не найден");
         }
@@ -63,21 +61,20 @@ public class EventServicePrivateImpl implements EventServicePrivate {
                 .map(EventMapper::toShortDto).collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
-    public EventFullDto addPrivateEventByUserId(Long userId, NewEventDto newEventDto) {
-        log.info("Получен запрос на добавление события пользователем с id= {} (приватный)", userId);
+    public EventFullDto createPrivateEventByUserId(Long userId, NewEventDto newEventDto) {
         checkEventDate(DateFormatter.formatDate(newEventDto.getEventDate()));
         User user = getUserById(userId);
         Category category = getCategoryById(newEventDto.getCategory());
         Long views = 0L;
         Long confirmedRequests = 0L;
-        Event event = EventMapper.newEventDtoToCreateEvent(newEventDto, user, category, views, confirmedRequests);
+        Event event = EventMapper.createEvent(newEventDto, user, category, views, confirmedRequests);
         return getEventFullDto(event);
     }
 
     @Override
     public EventFullDto getPrivateEventByIdAndByUserId(Long userId, Long eventId, HttpServletRequest request) {
-        log.info("Получен запрос на получение события с id= {} для пользователя с id= {} (приватный)", eventId, userId);
         User user = getUserById(userId);
         Event event = getEventById(eventId);
         checkOwnerEvent(event, user);
@@ -85,9 +82,9 @@ public class EventServicePrivateImpl implements EventServicePrivate {
         return EventMapper.toDto(event);
     }
 
+    @Transactional
     @Override
     public EventFullDto updatePrivateEventByIdAndByUserId(Long userId, Long eventId, UpdateEventUserRequest updateEvent, HttpServletRequest request) {
-        log.info("Получен запрос на обновление события с id= {} для пользователя с id= {} (приватный)", eventId, userId);
         if (updateEvent.getEventDate() != null) {
             checkEventDate(DateFormatter.formatDate(updateEvent.getEventDate()));
         }
@@ -121,7 +118,7 @@ public class EventServicePrivateImpl implements EventServicePrivate {
             event.setRequestModeration(updateEvent.getRequestModeration());
         }
         if (updateEvent.getStateAction() != null) {
-            event.setState(determiningTheStatusForEvent(updateEvent.getStateAction()));
+            event.setState(calculateStatusForEvent(updateEvent.getStateAction()));
         }
         if (updateEvent.getTitle() != null && !updateEvent.getTitle().isBlank()) {
             event.setTitle(updateEvent.getTitle());
@@ -137,7 +134,6 @@ public class EventServicePrivateImpl implements EventServicePrivate {
 
     @Override
     public List<ParticipationRequestDto> getAllPrivateEventsByRequests(Long userId, Long eventId, HttpServletRequest request) {
-        log.info("Получен запрос на получение всех запросов для события с id= {} для пользователя с id= {} (приватный)", eventId, userId);
         try {
             Event event = getEventById(eventId);
             User user = getUserById(userId);
@@ -150,9 +146,9 @@ public class EventServicePrivateImpl implements EventServicePrivate {
         }
     }
 
+    @Transactional
     @Override
     public EventRequestStatusUpdateResult updateEventRequestStatus(Long userId, Long eventId, EventRequestStatusUpdateRequest eventRequest, HttpServletRequest request) {
-        log.info("Получен запрос на обновление статуса запроса для события с id= {} для пользователя с id= {} (приватный)", eventId, userId);
         Event event = getEventById(eventId);
         User user = getUserById(userId);
         checkOwnerEvent(event, user);
@@ -163,18 +159,14 @@ public class EventServicePrivateImpl implements EventServicePrivate {
             event.setConfirmedRequests(0L);
         }
         if (event.getParticipantLimit() <= event.getConfirmedRequests()) {
-            log.warn("Достигнут лимит по заявкам на данное событие с id= {}", eventId);
             throw new ConflictEventPublicationException("Достигнут лимит по заявкам на данное событие с id= " + eventId);
         }
         List<Request> requests = getAllRequestsContainsIds(eventRequest.getRequestIds());
         if (event.getParticipantLimit() == 0 || !event.isRequestModeration()) {
-            log.info("Подтверждение заявок не требуется");
             return new EventRequestStatusUpdateResult(new ArrayList<>(), new ArrayList<>());
         } else if (eventRequest.getStatus().equals(RequestStatusDto.CONFIRMED)) {
-            log.info("Запрос на подтверждение заявок");
             return considerationOfRequests(event, requests);
         } else if (eventRequest.getStatus().equals(RequestStatusDto.REJECTED)) {
-            log.info("Запрос на отклонение заявок");
             EventRequestStatusUpdateResult result = new EventRequestStatusUpdateResult(new ArrayList<>(), new ArrayList<>());
             List<ParticipationRequestDto> rejectedRequests = addRejectedAllRequests(requests);
             result.getRejectedRequests().addAll(rejectedRequests);
@@ -199,7 +191,7 @@ public class EventServicePrivateImpl implements EventServicePrivate {
         }
     }
 
-    private EventState determiningTheStatusForEvent(ActionStateDto stateAction) {
+    private EventState calculateStatusForEvent(ActionStateDto stateAction) {
         if (stateAction.equals(ActionStateDto.SEND_TO_REVIEW)) {
             return EventState.PENDING;
         } else if (stateAction.equals(ActionStateDto.CANCEL_REVIEW)) {
@@ -239,7 +231,7 @@ public class EventServicePrivateImpl implements EventServicePrivate {
     private EventRequestStatusUpdateResult considerationOfRequests(Event event, List<Request> requests) {
         List<ParticipationRequestDto> confirmedRequests = new ArrayList<>();
         List<ParticipationRequestDto> rejectedRequests = new ArrayList<>();
-        long count = processingEvents.countAllRequestsForOneEvent(event, RequestStatus.CONFIRMED);
+        long count = processingEvents.getCountAllRequestsForOneEvent(event, RequestStatus.CONFIRMED);
         event.setConfirmedRequests(count);
         for (Request req : requests) {
             if (!req.getStatus().equals(RequestStatus.PENDING)) {
@@ -271,7 +263,7 @@ public class EventServicePrivateImpl implements EventServicePrivate {
     }
 
     private void addEventConfirmedRequestsAndViews(Event event, HttpServletRequest request) {
-        long count = processingEvents.countAllRequestsForOneEvent(event, RequestStatus.CONFIRMED);
+        long count = processingEvents.getCountAllRequestsForOneEvent(event, RequestStatus.CONFIRMED);
         event.setConfirmedRequests(count);
         long views = processingEvents.searchViews(event, request);
         event.setViews(views);

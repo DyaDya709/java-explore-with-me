@@ -1,18 +1,19 @@
 package ru.practicum.category.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-
-@Setter
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class NewCategoryDto { // Данные для добавления новой категории
+public class NewCategoryDto {
     @Size(max = 50)
     @NotBlank
-    private String name; // Название категории example: Концерты
+    private String name;
 }

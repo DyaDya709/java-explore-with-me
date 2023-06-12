@@ -1,16 +1,16 @@
 package ru.practicum.events.compilation.dto;
 
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
 import ru.practicum.events.event.dto.EventShortDto;
 
 import java.util.List;
 
-@Value
+@Data
 @Builder
-public class CompilationDto { //Подборка событий
+public class CompilationDto {
     List<EventShortDto> events;
     Long id;
-    boolean pinned; // Закреплена ли подборка на главной странице сайта example: true
-    String title; // Заголовок подборки example: Летние концерты
+    boolean pinned;
+    String title;
 }

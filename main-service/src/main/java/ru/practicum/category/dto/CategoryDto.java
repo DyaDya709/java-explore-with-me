@@ -1,21 +1,20 @@
 package ru.practicum.category.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-@Value
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class CategoryDto { // Категория
-    Long id; // Идентификатор категории
+public class CategoryDto {
+    Long id;
     @Size(max = 50)
     @NotBlank
-    String name; // example: Концерты Название категории
-
-    public CategoryDto(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    String name;
 }
