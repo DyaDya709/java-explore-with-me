@@ -16,7 +16,6 @@ import ru.practicum.users.model.User;
 import ru.practicum.users.service.UserServiceAdmin;
 import ru.practicum.users.storage.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

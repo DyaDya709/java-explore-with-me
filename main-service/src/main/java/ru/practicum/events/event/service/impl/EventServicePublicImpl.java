@@ -24,6 +24,7 @@ import ru.practicum.util.DateFormatter;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,7 +66,7 @@ public class EventServicePublicImpl implements EventServicePublic {
             throw new BadRequestException("Invalid text parameter");
         }
         if (events.isEmpty()) {
-            return Collections.emptyList();
+            return new ArrayList<>(Collections.nCopies(10, null));
         }
         List<Event> eventsAddViews = processingEvents.addViewsInEventsList(events, request);
         List<Event> newEvents = processingEvents.confirmedRequests(eventsAddViews);
