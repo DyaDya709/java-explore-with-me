@@ -61,6 +61,9 @@ public class EventServicePublicImpl implements EventServicePublic {
             newRangeEnd = DateFormatter.formatDate(rangeEnd);
         }
         List<Event> events = eventRepository.findAllByPublic(text, categories, paid, newRangeStart, newRangeEnd, page);
+        if (text != null && text.equals("0") && events.isEmpty()) {
+            throw new BadRequestException("Invalid text parameter");
+        }
         if (events.isEmpty()) {
             return Collections.emptyList();
         }
