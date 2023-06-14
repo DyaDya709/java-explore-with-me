@@ -10,9 +10,9 @@ import java.util.List;
 @Data
 @Builder
 public class NewCompilationDto {
-    List<Long> events;
-    boolean pinned;
+    private List<Long> events;
+    private boolean pinned;
     @Size(max = 50)
     @NotBlank
-    String title;
+    private String title;
 }

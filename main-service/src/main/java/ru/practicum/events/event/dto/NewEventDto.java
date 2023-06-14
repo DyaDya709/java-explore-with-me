@@ -10,20 +10,20 @@ import javax.validation.constraints.*;
 public class NewEventDto {
     @NotBlank
     @Size(min = 20, max = 2000)
-    String annotation;
+    private String annotation;
     @NotNull
-    Long category;
+    private Long category;
     @NotBlank
     @Size(min = 20, max = 7000)
-    String description;
+    private String description;
     @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}", message = "Invalid date format")
-    String eventDate;
-    LocationDto location;
-    Boolean paid;
+    private String eventDate;
+    private LocationDto location;
+    private Boolean paid;
     @PositiveOrZero
-    Integer participantLimit;
-    Boolean requestModeration;
+    private Integer participantLimit;
+    private Boolean requestModeration;
     @NotBlank
     @Size(min = 3, max = 120)
-    String title;
+    private String title;
 }

@@ -12,18 +12,18 @@ import javax.validation.constraints.Size;
 @Builder
 public class UpdateEventAdminRequest {
     @Size(min = 20, max = 2000)
-    String annotation;
-    Long category;
+    private String annotation;
+    private Long category;
     @Size(min = 20, max = 7000)
-    String description;
+    private String description;
     @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}", message = "Invalid date format")
-    String eventDate;
-    LocationDto location;
-    Boolean paid;
+    private String eventDate;
+    private LocationDto location;
+    private Boolean paid;
     @PositiveOrZero
-    Integer participantLimit;
-    Boolean requestModeration;
-    ActionStateDto stateAction;
+    private Integer participantLimit;
+    private Boolean requestModeration;
+    private ActionStateDto stateAction;
     @Size(min = 3, max = 120)
-    String title;
+    private String title;
 }

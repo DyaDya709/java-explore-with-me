@@ -13,8 +13,8 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Builder
 public class CategoryDto {
-    Long id;
+    private Long id;
     @Size(max = 50)
     @NotBlank
-    String name;
+    private String name;
 }

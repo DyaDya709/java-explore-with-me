@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 // Заявка на участие в событии
 public class ParticipationRequestDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-    LocalDateTime created;
-    Long event;
-    Long id;
-    Long requester;
-    String status;
+    private LocalDateTime created;
+    private Long event;
+    private Long id;
+    private Long requester;
+    private String status;
 }
