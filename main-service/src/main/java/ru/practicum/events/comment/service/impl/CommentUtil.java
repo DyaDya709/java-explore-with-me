@@ -28,8 +28,8 @@ public class CommentUtil {
     public void moderateMessage(String text) {
         List<String> newText = Stream.of(text.split(" ")).map(String::toLowerCase).collect(Collectors.toList());
         List<String> lines = List.of("мат", "брань");
-        newText.retainAll(lines);
-        if (!newText.isEmpty()) {
+        boolean hasMatch = newText.stream().anyMatch(lines::contains);
+        if (hasMatch) {
             throw new BadRequestException("Комментарий является недопустимым и отклонен");
         }
     }
