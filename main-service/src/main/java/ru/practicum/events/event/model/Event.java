@@ -2,11 +2,13 @@ package ru.practicum.events.event.model;
 
 import lombok.*;
 import ru.practicum.category.model.Category;
+import ru.practicum.events.comment.model.Comment;
 import ru.practicum.events.event.model.location.Location;
 import ru.practicum.users.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * События
@@ -55,4 +57,6 @@ public class Event {
     private String title;
     @Transient
     private Long views;
+    @OneToMany(mappedBy = "event")
+    private List<Comment> comments;
 }

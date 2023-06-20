@@ -3,6 +3,7 @@ package ru.practicum.events.event.mapper;
 import lombok.experimental.UtilityClass;
 import ru.practicum.category.mapper.CategoryMapper;
 import ru.practicum.category.model.Category;
+import ru.practicum.events.event.dto.EventCommentDto;
 import ru.practicum.events.event.dto.EventFullDto;
 import ru.practicum.events.event.dto.EventShortDto;
 import ru.practicum.events.event.dto.NewEventDto;
@@ -75,6 +76,17 @@ public class EventMapper {
                 .state(EventState.PENDING)
                 .title(newEventDto.getTitle())
                 .views(views)
+                .build();
+    }
+
+    public EventCommentDto toEventCommentDto(Event event) {
+        return EventCommentDto.builder()
+                .annotation(event.getAnnotation())
+                .category(CategoryMapper.toDto(event.getCategory()))
+                .eventDate(event.getEventDate())
+                .id(event.getId())
+                .initiator(UserMapper.toShortDto(event.getInitiator()))
+                .title(event.getTitle())
                 .build();
     }
 
