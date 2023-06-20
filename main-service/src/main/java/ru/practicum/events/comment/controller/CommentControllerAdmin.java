@@ -19,7 +19,7 @@ import java.util.List;
 public class CommentControllerAdmin {
     private final CommentServiceAdmin commentServiceAdmin;
 
-    @PostMapping()
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     CommentDto createComment(@Validated @RequestBody InputCommentDto inputCommentDto) {
         return commentServiceAdmin.createComment(inputCommentDto);

@@ -12,10 +12,10 @@ import javax.validation.constraints.Size;
 public class UpdateCommentAdminDto {
     @NotBlank
     @Size(max = 1500)
-    String text;
+    private String text;
     @NotNull
-    Long userId;
+    private Long userId;
     @NotNull
-    Long eventId;
-    CommentStateDto commentStateDto;
+    private Long eventId;
+    private CommentStateDto commentStateDto;
 }

@@ -12,9 +12,9 @@ import javax.validation.constraints.Size;
 public class InputCommentDto {
     @NotBlank
     @Size(max = 1500)
-    String text;
+    private String text;
     @NotNull
-    Long userId;
+    private Long userId;
     @NotNull
-    Long eventId;
+    private Long eventId;
 }
