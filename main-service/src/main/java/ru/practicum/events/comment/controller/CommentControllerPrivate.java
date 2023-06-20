@@ -18,7 +18,7 @@ import java.util.List;
 public class CommentControllerPrivate {
     private final CommentServicePrivate commentServicePrivate;
 
-    @PostMapping()
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     CommentDto createComment(@Validated @RequestBody InputCommentDto inputCommentDto) {
         return commentServicePrivate.createComment(inputCommentDto);

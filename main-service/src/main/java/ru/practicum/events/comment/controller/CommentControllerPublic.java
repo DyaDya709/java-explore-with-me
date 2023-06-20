@@ -15,7 +15,7 @@ import java.util.List;
 public class CommentControllerPublic {
     private final CommentServicePublic commentServicePublic;
 
-    @GetMapping()
+    @GetMapping
     List<CommentDto> getAllCommentsByEventId(@PathVariable Long eventId,
                                              @PositiveOrZero @RequestParam(defaultValue = "0", required = false) Integer from,
                                              @Positive @RequestParam(defaultValue = "10", required = false) Integer size) {
